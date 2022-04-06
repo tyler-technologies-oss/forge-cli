@@ -2,6 +2,7 @@
   "name": "@tylertech/forge-cli",
   "version": "1.0.0",
   "description": "A command line interface for managing Forge Web Component projects.",
+  "repository": "tyler-technologies/forge-cli",
   "bin": {
     "forge": "bin/forge"
   },
