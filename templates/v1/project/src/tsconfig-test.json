@@ -1,0 +1,31 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "lib": ["dom", "es2015", "es2017"],
+    "sourceMap": true,
+    "inlineSources": true,
+    "noImplicitAny": false,
+    "experimentalDecorators": true,
+    "noImplicitReturns": true,
+    "preserveConstEnums": true,
+    "strictNullChecks": true,
+    "importHelpers": true,
+    "noEmitHelpers": true,
+    "pretty": true,
+    "types": [
+      "jasmine",
+      "node",
+      "webpack-env"
+    ],
+    "baseUrl": ".",
+    "paths": {
+      "<%= data.fullPackageName %>": ["lib"],
+      "<%= data.fullPackageName %>/*": ["lib/*"]
+    }
+  },
+  "exclude": [
+    "demo"
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "target": "es2017",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "lib": ["es2015", "dom", "es2017"],
+    "noImplicitAny": false,
+    "strictNullChecks": true,
+    "allowJs": false,
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "noEmitHelpers": true,
+    "noEmitOnError": true,
+    "esModuleInterop": true,
+    "baseUrl": "."
+  },
+  "exclude": [
+    "node_modules",
+    "templates",
+    "dist"
+  ]
+}

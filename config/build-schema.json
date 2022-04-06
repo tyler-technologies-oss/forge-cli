@@ -1,0 +1,83 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://forge.tylertech.com/build-schema.json",
+  "title": "Forge CLI Configuration",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "build"
+  ],
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "extends": {
+      "$ref": "#/definitions/extends"
+    },
+    "entry": {
+      "$ref": "#/definitions/entry"
+    },
+    "include": {
+      "$ref": "#/definitions/include"
+    },
+    "compile": {
+      "$ref": "#/definitions/compile"
+    },
+    "name": {
+      "$ref": "#/definitions/name"
+    },
+    "bundle": {
+      "$ref": "#/definitions/bundle"
+    },
+    "stylesheets": {
+      "$ref": "#/definitions/stylesheets"
+    }
+  },
+  "definitions": {
+    "extends": {
+      "type": "string",
+      "description": "A relative path to a base build.json to inherit from."
+    },
+    "entry": {
+      "type": "string",
+      "description": "A relative path to the entry file. Typically `index.ts`."
+    },
+    "include": {
+      "type": "boolean",
+      "description": "Controls whether or not to include this component in the individual component build process."
+    },
+    "compile": {
+      "type": "boolean",
+      "description": "Tells the invidual component build process to skip JavaScript bundling and compilation of TypeScript."
+    },
+    "name": {
+      "type": "string",
+      "description": "The name override to use when generating files for the component. Defaults to the directory name."
+    },
+    "bundle": {
+      "type": "string",
+      "description": "Flags relating to the bundling processes within the bundling build step.",
+      "additionalProperties": {
+        "pack": {
+          "type": "boolean",
+          "description": "Controls whether the build process will generate a pre-built webpack distribution bundle or not. Defaults to true."
+        },
+        "esm": {
+          "type": "boolean",
+          "description": "Controls whether the build process will generate an ES module distribution bundle or not. Defaults to true."
+        }
+      }
+    },
+    "stylesheets": {
+      "type": "array",
+      "description": "This object is passed directly to rollup-plugin-commonjs during bundling. See https://github.com/rollup/rollup-plugin-commonjs for more information.",
+      "additionalProperties": {
+        "type": "array",
+        "description": "An array of relative paths to Sass/CSS stylesheets to build and include in the component assets generation process.",
+        "items": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

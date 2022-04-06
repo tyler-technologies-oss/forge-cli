@@ -1,0 +1,28 @@
+{
+  "testEnvironment": "node",
+  "collectCoverage": true,
+  "coverageDirectory": "test/coverage",
+  "coverageReporters": [
+    "html",
+    "text-summary"
+  ],
+  "collectCoverageFrom": [
+    "<rootDir>/src/**/*.ts"
+  ],
+  "transform": {
+    "^.+\\.(ts)$": "ts-jest"
+  },
+  "testMatch": [
+    "<rootDir>/test/spec/**/*.spec.ts"
+  ],
+  "moduleFileExtensions": [
+    "ts",
+    "js",
+    "json"
+  ],
+  "testPathIgnorePatterns": [
+    "/node_modules/",
+    "/dist/",
+    "/templates/"
+  ]
+}

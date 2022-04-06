@@ -1,0 +1,20 @@
+#!/usr/bin/env node
+'use strict';
+
+process.title = 'forge';
+
+// Ensure node version
+var semver = require('semver');
+var packageJson = require('../package.json');
+var currentNodeVersion = process.version.replace('v', '');
+var requiresNodeVersion = packageJson.engines.node;
+
+if (!semver.satisfies(currentNodeVersion, requiresNodeVersion)) {
+  var chalk = require('chalk');
+  console.error(chalk.red(`ERROR: Forge CLI requires Node version ${requiresNodeVersion}`));
+  process.exit(1);
+}
+
+// Initialize the cli
+var cli = require('../src/index');
+cli.run(process, __dirname);
