@@ -400,8 +400,8 @@ async function createComponentDistributionStructure(config: IBuildTaskConfigurat
     ];
     await copyFilesMultiple(fileConfigs);
 
-    // Append license headers to all .mjs|.js|.scss|.css files in the component dir
-    await appendLicenseHeaders(config, join(componentDistDir, '**/*.*(mjs|js|scss|css)'));
+    // Append license headers to all .js|.scss|.css files in the component dir
+    await appendLicenseHeaders(config, join(componentDistDir, '**/*.*(js|scss|css)'));
   }, config.quiet);
 }
 
@@ -458,8 +458,8 @@ export async function createNpmPackage(config: IBuildTaskConfiguration, packageN
 
     await copyFilesMultiple(fileConfigs);
 
-    // Append license headers to all .mjs|.js|.scss|.css files in the package
-    await appendLicenseHeaders(config, join(releaseRootDir, '**/*.*(mjs|js|scss|css)'));
+    // Append license headers to all .js|.scss|.css files in the package
+    await appendLicenseHeaders(config, join(releaseRootDir, '**/*.*(js|scss|css)'));
   }, config.quiet);
 }
 
@@ -477,7 +477,7 @@ export async function createModuleBundles(config: IBuildTaskConfiguration, entry
   const rollupConfig: IBundleConfig = {
     name: packageName,
     input: join(buildDir, `${entryName}.js`),
-    file: join(outputDir, `${packageName}.mjs`),
+    file: join(outputDir, `${packageName}.js`),
     format: 'es',
     version,
     minify: false // We let consumers minify our ES module bundles as they are typically not loaded directly
@@ -617,7 +617,6 @@ export async function webpackTask(config: IBuildTaskConfiguration, entry: any, o
   const env: IWebpackEnv = {
     root: config.paths.rootDir,
     mode: 'production',
-    packageName: config.context.packageName,
     tsconfigPath,
     cache: true,
     entry,

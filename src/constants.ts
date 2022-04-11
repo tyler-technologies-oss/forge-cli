@@ -1,7 +1,7 @@
 import { IProjectConfig } from './core/definitions';
 
 export const DEFAULT_PACKAGE_ORG = '@tylertech';
-export const DEFAULT_PACKAGE_NAME = 'tyler-components-web';
+export const DEFAULT_PACKAGE_NAME = 'forge';
 export const CONFIG_FILENAME = 'forge.json';
 export const DEFAULT_COMPONENT_PREFIX = 'forge';
 export const CURRENT_TEMPLATE_VERSION = 'v1';

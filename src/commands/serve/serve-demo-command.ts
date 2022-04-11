@@ -170,7 +170,6 @@ async function startWebpack(config: IConfig, mode: 'production' | 'development',
   const env: IWebpackEnv = {
     root: config.context.paths.rootDir,
     mode,
-    packageName: config.context.packageName,
     tsconfigPath,
     cache: true,
     entry: {

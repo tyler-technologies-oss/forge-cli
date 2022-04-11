@@ -10,7 +10,6 @@ export type WebpackConfigurationFactory = (env: IWebpackEnv) => Configuration;
 
 export interface IWebpackEnv {
   root: string;
-  packageName: string;
   tsconfigPath: string;
   entry: { [key: string]: string };
   outputDir: string;
