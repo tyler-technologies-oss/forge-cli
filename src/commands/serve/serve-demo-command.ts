@@ -1,4 +1,4 @@
-import { absolutify, camelCase, existsAsync, Logger, OS } from '@tylertech/forge-build-tools';
+import { absolutify, existsAsync, Logger, OS } from '@tylertech/forge-build-tools';
 import * as bs from 'browser-sync';
 import chalk from 'chalk';
 import webpack from 'webpack';
@@ -15,7 +15,7 @@ export const DEFAULT_DEV_SERVER_HOST = 'localhost';
 export const DEFAULT_DEV_SERVER_PORT = 9000;
 
 export interface IServeDemoCommandOptions extends IGlobalOptions {
-  prod: boolean;
+  dev: boolean;
   host: string;
   port: number | null;
   components: boolean;
@@ -33,9 +33,9 @@ export class ServeDemoCommand implements ICommand {
   public description = 'Serves the development demo website.';
   public options: ICommandOption[] = [
     {
-      name: 'prod',
+      name: 'dev',
       type: String,
-      description: 'Runs the dev site in production mode.'
+      description: 'Runs the demo site in development mode.'
     },
     {
       name: 'host',
@@ -72,7 +72,7 @@ export class ServeDemoCommand implements ICommand {
 
   public async run(param: ICommandParameter): Promise<void> {
     const options: IServeDemoCommandOptions = {
-      prod: assertBoolean(param.args.prod),
+      dev: assertBoolean(param.args.dev),
       host: param.args.host,
       port: param.args.port ? +param.args.port : null,
       components: assertBoolean(param.args.components),
@@ -96,7 +96,7 @@ export async function serveCommand(config: IConfig, options: IServeDemoCommandOp
 }
 
 async function serveDemoWebsite(config: IConfig, options: IServeDemoCommandOptions): Promise<void> {
-  const mode = options.prod ? 'production' : 'development';
+  const mode = options.dev ? 'development' : 'production';
   const host = options.host || DEFAULT_DEV_SERVER_HOST;
   const port = options.port || await findClosestOpenPort(DEFAULT_DEV_SERVER_PORT, host);
   const path = options.path || `${config.context.srcDirName}/${config.context.demoDirName}`;
@@ -177,8 +177,8 @@ async function startWebpack(config: IConfig, mode: 'production' | 'development',
     },
     outputDir: `${config.context.distDirName}/build`,
     clean: false,
-    beautify: true,
-    minify: false,
+    beautify: false,
+    minify: mode === 'production',
     devtool: config.context.build.webpack.devtool,
     externals: config.context.build.webpack.externals,
     fileNamePrefix: config.context.build.webpack.filename || config.context.packageName,
