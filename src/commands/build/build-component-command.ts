@@ -2,7 +2,7 @@ import { formatHrTime, Logger } from '@tylertech/forge-build-tools';
 import chalk from 'chalk';
 
 import { ICommand, ICommandParameter, ICommandArg, ICommandOption } from '../../core/command';
-import { getTimeStamp } from '../../utils/utils';
+import { assertBoolean, getTimeStamp } from '../../utils/utils';
 import { buildComponent, IBuildTaskConfiguration } from '../../utils/build-utils';
 
 
@@ -22,6 +22,12 @@ export class BuildComponentCommand implements ICommand {
     }
   ];
   public options: ICommandOption[] = [
+    {
+      name: 'lint',
+      type: Boolean,
+      description: 'Controls whether the lint task is run or not.',
+      defaultValue: 'true'
+    },
     {
       name: 'cleancss',
       type: Boolean,
@@ -55,8 +61,8 @@ export async function buildComponentCommand(ctx: IBuildTaskConfiguration, compon
   const start = process.hrtime();
   Logger.info(`[${getTimeStamp()}] Build ${componentName} started...\n`);
 
-  await buildComponent(ctx, componentName);
-
+  const lintCode = assertBoolean(ctx.args.lint, true);
+  await buildComponent(ctx, componentName, lintCode);
 
   const elapsed = process.hrtime(start);
   Logger.newline();

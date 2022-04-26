@@ -9,6 +9,6 @@ export interface IBuildWorkerContext {
 parentPort?.on('message', (data: IBuildWorkerContext) => executeTask(data));
 
 async function executeTask(data: IBuildWorkerContext): Promise<void> {
-  await buildComponent(data.taskContext, data.componentName);
+  await buildComponent(data.taskContext, data.componentName, false);
   parentPort?.postMessage(data.componentName);
 }

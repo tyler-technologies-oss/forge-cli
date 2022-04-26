@@ -75,7 +75,7 @@ export interface IComponentBuildJson {
   };
 }
 
-export async function buildComponent(config: IBuildTaskConfiguration, componentName: string): Promise<void> {
+export async function buildComponent(config: IBuildTaskConfiguration, componentName: string, lintCode: boolean): Promise<void> {
   componentName = dashify(componentName);
 
   if (!existsSync(join(config.paths.libDir, componentName))) {
@@ -87,7 +87,6 @@ export async function buildComponent(config: IBuildTaskConfiguration, componentN
   const buildRoot = join(config.paths.distBuildDir, componentName);
   const buildOutputDir = join(buildRoot, TEMP_BUILD_DIR_NAME);
   const bundleOutputDir = join(buildRoot, BUNDLE_OUTPUT_DIR_NAME);
-  const lintCode = assertBoolean(config.args.lint, true);
 
   // If the component directory has a `package.json` we assume that this component is to be built and distributed as
   // an npm package, so let's generate that.
@@ -342,7 +341,7 @@ export async function generateComponentBundles(config: IBuildTaskConfiguration, 
         // Generate the module bundles
         const rollupGlobals = getRollupGlobals(config.paths.libDir, componentName, config.context.externalDependencies);
         const rollupBuildDir = config.context.libDirName !== componentName ? join(jsBuildDir, componentName) : jsBuildDir;
-        await createModuleBundles(config, entryName, rollupBuildDir, bundleOutputDir, componentName, libPackageJson.version, rollupGlobals);
+        await createModuleBundles(config, entryName, rollupBuildDir, bundleOutputDir, `${componentName}.esm`, libPackageJson.version, rollupGlobals);
       }, config.quiet);
     }
   }
