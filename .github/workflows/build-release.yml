@@ -114,7 +114,6 @@ jobs:
     with:
       BUILD_ENABLED: ${{ needs.wf-config.outputs.build-files-changed == 'true' }}
       TESTS_ENABLED: ${{ needs.wf-config.outputs.test-files-changed == 'true' }}
-      TESTS_NPM_SCRIPT: 'test'
     secrets:
       ARTIFACTORY_TOKEN: ${{ secrets.FORGE_ARTIFACTORY_TOKEN }}
       ARTIFACTORY_USERNAME: ${{ secrets.FORGE_ARTIFACTORY_USERNAME }}
