@@ -1,6 +1,6 @@
 {
   "name": "@tylertech/forge-cli",
-  "version": "1.0.0-rc.1",
+  "version": "2.0.0-rc.0",
   "description": "A command line interface for managing Forge Web Component projects.",
   "repository": "tyler-technologies/forge-cli",
   "bin": {
@@ -24,7 +24,7 @@
     "changelog": "auto changelog"
   },
   "dependencies": {
-    "@tylertech/forge-build-tools": "^1.0.0-dev.1",
+    "@tylertech/forge-build-tools": "^2.0.0-rc.0",
     "autoprefixer": "^10.4.4",
     "browser-sync": "^2.27.9",
     "canonical-path": "^1.0.0",
@@ -76,7 +76,6 @@
   },
   "devDependencies": {
     "@auto-it/conventional-commits": "^10.36.5",
-    "@auto-it/exec": "^10.36.5",
     "@auto-it/first-time-contributor": "^10.36.5",
     "@auto-it/npm": "^10.36.5",
     "@auto-it/pr-body-labels": "^10.36.5",
