@@ -12,7 +12,7 @@ on:
     paths:
       - '.github/workflows/**/*'
       - '.eslintrc.json'
-      - 'gulpfile.js'
+      - 'gulpfile.ts'
       - 'tsconfig.json'
       - 'bin/**/*'
       - 'config/**/*'
@@ -91,7 +91,7 @@ jobs:
               - '.github/workflows/**'
               - '.eslintrc.json'
               - 'auto.config.ts'
-              - 'gulpfile.js'
+              - 'gulpfile.ts'
               - 'tsconfig.json'
               - 'bin/**'
               - 'config/**'
