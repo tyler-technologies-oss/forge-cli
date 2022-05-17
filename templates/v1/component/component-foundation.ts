@@ -1,4 +1,4 @@
-import { ICustomElementFoundation } from '@tyler-components-web/core';
+import { ICustomElementFoundation } from '@tylertech/forge-core';
 
 import { I<%= data.componentClassName %>Adapter } from './<%= data.componentName %>-adapter';
 

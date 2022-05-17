@@ -45,7 +45,7 @@ export class TestComponentCommand implements ICommand {
       description: 'Specifies that the test run is being executed within a CI environment.'
     },
     {
-      name: 'stopOnSpecFailure',
+      name: 'stop',
       type: Boolean,
       description: 'Controls whether test run finishes with an error after first failed test.'
     },
@@ -74,7 +74,7 @@ export class TestComponentCommand implements ICommand {
     const coverage = assertBoolean(param.args.coverage, true);
     const sandbox = assertBoolean(param.args.sandbox, true);
     const ci = assertBoolean(param.args.ci, false);
-    const stopOnSpecFailure = assertBoolean(param.args.stopOnSpecFailure, false);
+    const stopOnSpecFailure = assertBoolean(param.args.stop, false);
     const seed = param.args.seed ? param.args.seed : undefined;
     const karmaConfig = generateKarmaConfig(param.config, browser, singleRun, { port, components, coverage, ci, stopOnSpecFailure, seed, sandbox});
     const exitCode = await startKarma(karmaConfig);

@@ -1,15 +1,13 @@
-import { join, basename, resolve } from 'canonical-path';
-import { Question } from 'inquirer';
+import { absolutify, FileTemplateData, InstallFileDescriptor, installFiles, InstallType, Logger, runCommand, runTask } from '@tylertech/forge-build-tools';
+import { basename, join } from 'canonical-path';
 import chalk from 'chalk';
-import { InstallType, InstallFileDescriptor, installFiles, FileTemplateData, absolutify, ensureDir, runCommand, runTask, Logger } from '@tylertech/forge-build-tools';
+import { Question } from 'inquirer';
+import { DEFAULT_COMPONENT_PREFIX, DEFAULT_NPM_REGISTRY, DEFAULT_PACKAGE_ORG, TEMPLATE_INTERPOLATION_REGEX } from '../../constants';
+import { ICommand, ICommandArg, ICommandOption, ICommandParameter } from '../../core/command';
+import { IConfig } from '../../core/definitions';
+import { assertBoolean, printInstallationSummary } from '../../utils/utils';
 
 const uppercamelcase = require('uppercamelcase');
-
-import { IConfig } from '../../core/definitions';
-import { TEMPLATE_INTERPOLATION_REGEX, DEFAULT_PACKAGE_ORG, DEFAULT_COMPONENT_PREFIX, DEFAULT_NPM_REGISTRY, CURRENT_TEMPLATE_VERSION, DEFAULT_PROJECT_CONFIG } from '../../constants';
-import { printInstallationSummary, assertBoolean } from '../../utils/utils';
-import { ICommand, ICommandParameter, ICommandOption, ICommandArg } from '../../core/command';
-import { Configuration } from '../../core/configuration';
 
 export interface INewCommandOptions {
   path: string;
@@ -172,11 +170,6 @@ export async function createProject(config: IConfig, options: INewCommandOptions
       type: InstallType.Copy,
       path: join(templateRoot, 'src/lib/index.ts'),
       outputPath: join(options.path, 'src/lib/index.ts')
-    },
-    {
-      type: InstallType.Template,
-      path: join(templateRoot, 'src/lib/package.json'),
-      outputPath: join(options.path, 'src/lib/package.json')
     },
     {
       type: InstallType.Copy,

@@ -6,15 +6,13 @@
     <title><%= data.fullPackageName %></title>
 
     <link rel="shortcut icon" href="favicon.ico" sizes="16x16" type="image/x-icon">
-    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Roboto:400,500,700,400italic|Material+Icons">
+    <link rel="stylesheet" href="https://cdn.forge.tylertech.com/v1/css/tyler-font.css">
     <link rel="stylesheet" href="styles/styles.css">
   </head>
   <body>
-    <h3>Forge</h3>
+    <h3>Component Demo</h3>
     <p><%= data.fullPackageName %></p>
 
-    <script type="text/javascript" src="../../node_modules/@webcomponents/webcomponentsjs/custom-elements-es5-adapter.js"></script>
-    <script type="text/javascript" src="../../node_modules/@webcomponents/webcomponentsjs/webcomponents-bundle.js"></script>
     <script type="text/javascript" src="../../dist/build/<%= data.packageName %>-lib.js"></script>
     <script type="text/javascript">
       <%= data.packageNameVariable %>.lib.defineComponents();

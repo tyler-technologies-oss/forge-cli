@@ -1,5 +1,4 @@
-import { CustomElement, attachShadowTemplate, ICustomElement } from '@tyler-components-web/core';
-
+import { CustomElement, attachShadowTemplate, ICustomElement } from '@tylertech/forge-core';
 import { <%= data.componentClassName %>Adapter } from './<%= data.componentName %>-adapter';
 import { <%= data.componentClassName %>Foundation } from './<%= data.componentName %>-foundation';
 import { <%= data.componentConstantName %>_CONSTANTS } from './<%= data.componentName %>-constants';
@@ -9,6 +8,12 @@ import styles from './<%= data.componentName %>.scss';
 
 export interface I<%= data.componentClassName %>Component extends ICustomElement {
 
+}
+
+declare global {
+  interface HTMLElementTagNameMap {
+    '<%= data.componentPrefix %>-<%= data.componentName %>': I<%= data.componentClassName %>Component;
+  }
 }
 
 @CustomElement({
@@ -23,12 +28,8 @@ export class <%= data.componentClassName %>Component extends HTMLElement impleme
 
   constructor() {
     super();
-    attachShadowTemplate(this, <%= data.componentConstantName %>_CONSTANTS.elementName, template, styles);
+    attachShadowTemplate(this, template, styles);
     this._foundation = new <%= data.componentClassName %>Foundation(new <%= data.componentClassName %>Adapter(this));
-  }
-
-  public initializedCallback(): void {
-    // TODO: Upgrade all public properties here
   }
 
   public connectedCallback(): void {

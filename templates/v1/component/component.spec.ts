@@ -1,26 +1,37 @@
-import { <%= data.componentClassName %>Component, <%= data.componentConstantName %>_CONSTANTS, define<%= data.componentClassName %>Component } from '<%= data.packageOrg %>/<%= data.packageName %>';
+import { I<%= data.componentClassName %>TestContext, <%= data.componentConstantName %>_CONSTANTS, define<%= data.componentClassName %>Component } from '<%= data.packageOrg %>/<%= data.packageName %>';
 
-describe('<%= data.componentClassName %>Component', () => {
-  let componentInstance: <%= data.componentClassName %>Component;
-  let fixtureContainer: HTMLElement;
+interface ITestContext {
+  context: I<%= data.componentClassName %>TestContext;
+}
 
-  beforeAll(() => {
+interface I<%= data.componentClassName %>TestContext {
+  component: I<%= data.componentClassName %>Component;
+  destroy(): void;
+}
+
+describe('<%= data.componentClassName %>Component', function(this: ITestContext) {
+  beforeAll(function(this: ITestContext) {
     define<%= data.componentClassName %>Component();
-    fixtureContainer = document.createElement('div');
-    document.body.appendChild(fixtureContainer);
   });
 
-  beforeEach(() => {    
-    const element = document.createElement(<%= data.componentConstantName %>_CONSTANTS.elementName);
-    fixtureContainer.appendChild(element);
-    componentInstance = document.querySelector(<%= data.componentConstantName %>_CONSTANTS.elementName) as <%= data.componentClassName %>Component;
+  afterEach(function(this: ITestContext) {
+    this.context.destroy();
   });
 
-  afterEach(() => {
-    fixtureContainer.removeChild(componentInstance);
+  it('should instantiate component instance', function(this: ITestContext) {
+    this.context = setupTextContext();
+
+    expect(this.context.component.shadowRoot).toBeTruthy();
   });
 
-  it('should instantiate component instance', () => {
-    expect(componentInstance.shadowRoot).not.toBeNull();
-  });  
+  function setupTextContext(): I<%= data.componentClassName %>TestContext {
+    const component = document.createElement(<%= data.componentConstantName %>_CONSTANTS.elementName);
+    document.body.appendChild(component);
+    return {
+      component,
+      destroy: () => {
+        document.body.removeChild(component);
+      }
+    };
+  }
 });

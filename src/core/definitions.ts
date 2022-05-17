@@ -32,8 +32,6 @@ export interface IProjectConfig {
   registry: string;
   license: IProjectLicenseConfig;
   paths: IProjectConfigPaths;
-  namedExports: { [key: string]: string[] };
-  externalDependencies: { [key: string]: string };
   build: IBuildProjectConfig;
   karma: IKarmaProjectConfig;
   packageConfig: IPackageConfig;
@@ -137,15 +135,6 @@ export interface IBuildConfig {
 
 export interface IBuildConfigPurify {
   whitelist: string[];
-}
-
-export interface IBundleConfig {
-  input: string;
-  name: string;
-  format: 'es' | 'cjs' | 'umd';
-  file: string;
-  version: string;
-  minify: boolean;
 }
 
 export interface IGlobalOptions {

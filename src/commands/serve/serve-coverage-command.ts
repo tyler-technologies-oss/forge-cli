@@ -34,7 +34,7 @@ export class ServeCoverageCommand implements ICommand {
     const browser = bs.create();
     browser.init({
       server: servePath,
-      port: port || await findClosestOpenPort(DEFAULT_BROWSER_PORT, 'localhost'),
+      port,
       notify: false,
       ghostMode: false,
       watch: true

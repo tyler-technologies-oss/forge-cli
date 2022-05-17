@@ -26,8 +26,11 @@ export async function run(process: NodeJS.Process, cliBinDir: string): Promise<v
     await cli.run();
   } catch (e) {
     Logger.newline();
-    Logger.error(chalk.red(e.message));
-    Logger.print(chalk.red(e.stack || e));
+    if (argv.verbose) {
+      Logger.print(chalk.red(e.stack || e));
+    } else {
+      Logger.error(chalk.red(e.message));
+    }
     process.exit(1);
   }
 }

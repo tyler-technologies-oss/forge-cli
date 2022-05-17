@@ -1,13 +1,9 @@
 {
-  "$schema": "./node_modules/@tyler-components-web/cli/schema.json",
+  "$schema": "./node_modules/@tylertech/forge-cli/schema.json",
   "packageOrg": "<%= data.packageOrg %>",
   "packageName": "<%= data.packageName %>",
   "registry": "<%= data.registry %>",
-  "externalDependencies": {
-    "tslib": "tslib",
-    "@tyler-components-web/core": "@tyler-components-web/core"
-  },
   "static": {
-    "distPath": "cdn/v1/libs/"
+    "distPath": "static"
   }
 }
