@@ -70,7 +70,7 @@
     },
     "stylesheets": {
       "type": "array",
-      "description": "This object is passed directly to rollup-plugin-commonjs during bundling. See https://github.com/rollup/rollup-plugin-commonjs for more information.",
+      "description": "Global stylesheets to generate.",
       "additionalProperties": {
         "type": "array",
         "description": "An array of relative paths to Sass/CSS stylesheets to build and include in the component assets generation process.",

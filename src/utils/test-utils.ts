@@ -68,9 +68,6 @@ export function generateKarmaConfig(config: IConfig, browsers: string | string[]
   if (browsers.some(b => b === 'Edge')) {
     browserLauncherPlugins.push(require('karma-edge-launcher'));
   }
-  if (browsers.some(b => b === 'IE')) {
-    browserLauncherPlugins.push(require('karma-ie-launcher'));
-  }
 
   const options: IKarmaOptions = {
     basePath: config.context.paths.rootDir,
@@ -285,8 +282,6 @@ function normalizeKarmaBrowsers(browsers: string | string[]): string[] {
         return 'Firefox';
       case 'edge':
         return 'Edge';
-      case 'ie':
-        return 'IE';
     }
   }) as string[];
 }
