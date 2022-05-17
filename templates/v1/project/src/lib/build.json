@@ -1,4 +1,4 @@
 {
-  "$schema": "./node_modules/@tyler-components-web/cli/build-schema.json",
+  "$schema": "../../node_modules/@tylertech/forge-cli/build-schema.json",
   "entry": "./index.ts"
 }

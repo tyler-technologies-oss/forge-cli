@@ -1,8 +1,8 @@
 # Forge CLI
 
-The Forge command line interface is a utility for building, managing, and deploying projects built as native Web Components.
+The Forge CLI is a utility for building and managing native Web Component libraries that follow the Forge project structure.
 
-This utility can be used to scaffold new projects and components, as well as build and publish Web Components libraries to npm.
+This utility can be used to scaffold new projects and components, as well as build and publish Forge Web Components libraries to npm.
 
 ## Usage
 
@@ -11,8 +11,6 @@ The CLI tool is intended to be installed individually within each project.
 ```shell
 $ npm install @tylertech/forge-cli
 ```
-
-> The `--registry` option is needed unless you have configured your system to default to the registry shown above.
 
 ## View commands
 
@@ -53,10 +51,10 @@ To run the build command in watch mode for an on-the-fly build:
 $ npm run watch
 ```
 
-Testing the CLI locally can be done by using `npm link`, or by just using a path the `dist` folder after a successful build:
+Testing the CLI locally can be done by using `npm link`, or by just using a path to the `dist` directory after a successful build:
 
 ```shell
-$ node ../tyler-components-web-cli/dist/bin/forge help
+$ node ../forge-cli/dist/bin/forge help
 ```
 
 ## License

@@ -2,7 +2,7 @@ import { camelCase, dashify, ensureDir, existsAsync, FileTemplateData, InstallFi
 import { join, relative } from 'canonical-path';
 import chalk from 'chalk';
 import { chmodSync } from 'fs';
-import { TEMPLATE_INTERPOLATION_REGEX } from '../../constants';
+import { DEFAULT_COMPONENT_PREFIX, TEMPLATE_INTERPOLATION_REGEX } from '../../constants';
 import { ICommand, ICommandArg, ICommandOption, ICommandParameter } from '../../core/command';
 import { IConfig } from '../../core/definitions';
 import { assertBoolean, printInstallationSummary } from '../../utils/utils';
@@ -10,6 +10,7 @@ import { assertBoolean, printInstallationSummary } from '../../utils/utils';
 export interface IGenerateComponentCommandOptions {
   spec: boolean;
   export: boolean;
+  prefix: string;
 }
 
 /**
@@ -39,6 +40,12 @@ export class GenerateComponentCommand implements ICommand {
       type: Boolean,
       description: 'Exports this component in the main index.ts.',
       defaultValue: 'true'
+    },
+    {
+      name: 'prefix',
+      type: String.name,
+      description: 'The element name prefix to use.',
+      defaultValue: DEFAULT_COMPONENT_PREFIX
     }
   ];
 
@@ -49,7 +56,8 @@ export class GenerateComponentCommand implements ICommand {
   public async run(param: ICommandParameter): Promise<void> {
     const options: IGenerateComponentCommandOptions = {
       spec: assertBoolean(param.args.spec, true),
-      export: assertBoolean(param.args.export, true)
+      export: assertBoolean(param.args.export, true),
+      prefix: param.args.prefix ?? DEFAULT_COMPONENT_PREFIX
     };
     await createComponent(param.config, param.args._[2], options);
   }
@@ -87,7 +95,8 @@ async function createComponent(config: IConfig, componentName: string, options: 
     packageName: config.context.packageName,
     registry: config.context.registry,
     fullPackageName: config.context.packageOrg ? `${config.context.packageOrg}/${config.context.packageName}` : config.context.packageName,
-    prefixImportPath: relative(componentDirPath, config.context.paths.libDir)
+    prefixImportPath: relative(componentDirPath, config.context.paths.libDir),
+    componentPrefix: options.prefix
   };
 
   // Find the components templates based on template version
@@ -139,11 +148,6 @@ async function createComponent(config: IConfig, componentName: string, options: 
       type: InstallType.Template,
       path: join(templateRoot, 'index.ts'),
       outputPath: join(componentDirPath, 'index.ts')
-    },
-    {
-      type: InstallType.Template,
-      path: join(templateRoot, 'package.json'),
-      outputPath: join(componentDirPath, 'package.json')
     }
   ];
 

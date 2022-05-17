@@ -44,12 +44,6 @@
     "license": {
       "$ref": "#/definitions/license"
     },
-    "externalDependencies": {
-      "$ref": "#/definitions/externalDependencies"
-    },
-    "namedExports": {
-      "$ref": "#/definitions/namedExports"
-    },
     "build": {
       "$ref": "#/definitions/build"
     },
@@ -124,25 +118,6 @@
     "packageOrg": {
       "type": "string",
       "description": "The npm org to place each package generated from this library under."
-    },
-    "externalDependencies": {
-      "type": "object",
-      "description": "This object is passed directly to rollup during bundling to use as rollup globals. See rollup documentation for more information.",
-      "additionalProperties": {
-        "type": "string",
-        "description": "The name of the global module."
-      }
-    },
-    "namedExports": {
-      "type": "object",
-      "description": "This object is passed directly to rollup-plugin-commonjs during bundling. See https://github.com/rollup/rollup-plugin-commonjs for more information.",
-      "additionalProperties": {
-        "type": "array",
-        "description": "The names of the commonjs module.",
-        "items": {
-          "type": "string"
-        }
-      }
     },
     "build": {
       "type": "object",

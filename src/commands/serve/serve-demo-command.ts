@@ -1,13 +1,12 @@
-import { absolutify, existsAsync, Logger, OS } from '@tylertech/forge-build-tools';
+import { absolutify, compileSass, existsAsync, logError, Logger, OS, runTask } from '@tylertech/forge-build-tools';
 import * as bs from 'browser-sync';
+import { join } from 'canonical-path';
 import chalk from 'chalk';
 import webpack from 'webpack';
 import { ICommand, ICommandOption, ICommandParameter } from '../../core/command';
 import { IConfig, IGlobalOptions } from '../../core/definitions';
-import { findClosestOpenPort } from '../../utils/network';
-import { assertBoolean } from '../../utils/utils';
+import { assertBoolean, getTimeStamp } from '../../utils/utils';
 import { getWebpackConfigurationFactory, IWebpackEnv } from '../../utils/webpack';
-import { buildStyleSheetTask } from '../build/build-stylesheet-command';
 
 const uppercamelcase = require('uppercamelcase');
 
@@ -18,8 +17,6 @@ export interface IServeDemoCommandOptions extends IGlobalOptions {
   dev: boolean;
   host: string;
   port: number | null;
-  components: boolean;
-  browser: string;
   open: boolean;
   path: string;
 }
@@ -48,11 +45,6 @@ export class ServeDemoCommand implements ICommand {
       description: 'The port to run the dev server on.'
     },
     {
-      name: 'components',
-      type: String,
-      description: 'Includes each individual component bundle in the output.'
-    },
-    {
       name: 'browser',
       type: String,
       description: 'The browser to run the dev server in.'
@@ -75,8 +67,6 @@ export class ServeDemoCommand implements ICommand {
       dev: assertBoolean(param.args.dev),
       host: param.args.host,
       port: param.args.port ? +param.args.port : null,
-      components: assertBoolean(param.args.components),
-      browser: param.args.browser,
       open: assertBoolean(param.args.open, true),
       path: param.args.path
     };
@@ -98,11 +88,9 @@ export async function serveCommand(config: IConfig, options: IServeDemoCommandOp
 async function serveDemoWebsite(config: IConfig, options: IServeDemoCommandOptions): Promise<void> {
   const mode = options.dev ? 'development' : 'production';
   const host = options.host || DEFAULT_DEV_SERVER_HOST;
-  const port = options.port || await findClosestOpenPort(DEFAULT_DEV_SERVER_PORT, host);
+  const port = options.port || undefined;
   const path = options.path || `${config.context.srcDirName}/${config.context.demoDirName}`;
-  const openbrowser = getBrowser(options.browser, config.os, host, port, path);
-
-  const browser = await initBrowser(config, path, port, host, openbrowser, options.open, !!options.verbose);
+  const browser = await initBrowser(config, path, port, host, options.open, !!options.verbose);
   await startWebpack(config, mode, browser);
 }
 
@@ -115,7 +103,7 @@ async function serveDemoWebsite(config: IConfig, options: IServeDemoCommandOptio
  * @param browser The browser to open.
  * @param verbose Show verbose output.
  */
-async function initBrowser(config: IConfig, startPath: string, port: number, host: string, browser: string, open: boolean, verbose: boolean): Promise<bs.BrowserSyncInstance> {
+async function initBrowser(config: IConfig, startPath: string, port: number | undefined = undefined, host: string, open: boolean, verbose: boolean): Promise<bs.BrowserSyncInstance> {
   const instance = bs.create();
   instance.init(
     {
@@ -123,11 +111,9 @@ async function initBrowser(config: IConfig, startPath: string, port: number, hos
         baseDir: config.context.paths.rootDir
       },
       startPath,
-      port: port || await findClosestOpenPort(DEFAULT_DEV_SERVER_PORT, host),
       notify: false,
       ghostMode: false,
       logLevel: verbose ? 'info' : 'silent',
-      browser,
       host,
       open: open === false ? false : host !== DEFAULT_DEV_SERVER_HOST ? 'external' : true,
       files: [
@@ -146,7 +132,7 @@ async function initBrowser(config: IConfig, startPath: string, port: number, hos
       ]
     },
     () => {
-      const url = instance.getOption('urls').get('local');
+      const url = instance.getOption('urls')?.get(host === DEFAULT_DEV_SERVER_HOST ? 'local' : 'external');
       Logger.info(`Serving demo website at: ${chalk.yellow(url)}`);
     }
   );
@@ -212,35 +198,12 @@ async function startWebpack(config: IConfig, mode: 'production' | 'development',
   });
 }
 
-/**
- * Returns the correct browser name based on the provided variation.
- * @param browser The browser variation string
- * @param os The current OS.
- * @param host The hostname.
- * @param port The port.
- * @param path The path to the application.
- */
-function getBrowser(browser: string, os: OS, host: string, port: number, path: string): string {
-  browser = (browser || '').trim();
-
-  // Normalize the browser names for ease of use...
-  if (browser === 'edge' || browser === 'microsoft-edge') {
-    browser = `microsoft-edge:http://${host}:${port}/${path}`;
-  } else if (browser === 'ie' || browser === 'iexplore') {
-    browser = 'iexplore';
-  } else if (browser === 'chrome' || browser === 'google-chrome' || browser === 'google chrome') {
-    switch (os) {
-      case OS.Windows:
-        browser = 'chrome';
-        break;
-      case OS.Linux:
-        browser = 'google-chrome';
-        break;
-      case OS.Mac:
-        browser = 'google chrome';
-        break;
+export async function buildStyleSheetTask(libDir: string, distStylesDir: string): Promise<void> {
+  return runTask(`[${getTimeStamp()}] Building StyleSheet...`, async () => {
+    try {
+      await compileSass(join(libDir, '*.scss'),  libDir, distStylesDir);
+    } catch (e) {
+      logError('Sass error: ' + e.message);
     }
-  }
-
-  return browser;
+  });
 }

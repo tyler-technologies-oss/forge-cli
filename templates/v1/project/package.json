@@ -2,7 +2,6 @@
   "name": "<%= data.fullPackageName %>",
   "version": "0.1.0",
   "description": "Forge component library",
-  "private": true,
   "scripts": {
     "build": "forge build",
     "build:stylesheet": "forge build stylesheet",
@@ -15,18 +14,17 @@
     "serve:coverage": "http-server -c 1 -o -p 9875 dist/coverage/html-report/html"
   },
   "dependencies": {
-    "@tyler-components-web/core": "^2.0.0",
-    "material-components-web": "^12.0.0",
-    "tslib": "^2.2.0"
+    "@tylertech/forge-core": "^2.0.0",
+    "tslib": "^2.3.1"
   },
   "devDependencies": {
-    "@tylertech/forge-cli": "1.0.0",
-    "@tylertech/stylelint-rules": "^2.0.0",
+    "@tylertech/forge-cli": "2.0.0",
+    "@tylertech/stylelint-rules": "^4.0.0",
     "@types/jasmine": "^3.6.9",
     "@types/node": "^14.14.41",
     "@types/webpack-env": "^1.16.0",
     "@tylertech-eslint/eslint-plugin": "^1.0.8",
-    "stylelint": "^13.12.0",
+    "stylelint": "^14.6.1",
     "typescript": "~4.6.3"
   }
 }

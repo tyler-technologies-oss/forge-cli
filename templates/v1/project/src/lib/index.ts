@@ -1,4 +1,4 @@
-import { defineCustomElements } from '@tyler-components-web/core';
+import { defineCustomElements } from '@tylertech/forge-core';
 
 export const CUSTOM_ELEMENTS = [
   // Custom element classes to register

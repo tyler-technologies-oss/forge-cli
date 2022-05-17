@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "target": "es2015",
     "module": "commonjs",
     "moduleResolution": "node",
     "lib": ["es2015", "dom", "es2017"],
@@ -9,13 +9,11 @@
     "experimentalDecorators": true,
     "importHelpers": true,
     "noEmitHelpers": true,
-    "types": [
-      "jasmine",
-      "node"
-    ],
+    "suppressImplicitAnyIndexErrors": true,
     "baseUrl": ".",
     "paths": {
-      "<%= data.fullPackageName %>": ["src/lib"]
+      "<%= data.fullPackageName %>": ["src/lib"],
+      "<%= data.fullPackageName %>/*": ["src/lib/*"]
     }
   },
   "exclude": [

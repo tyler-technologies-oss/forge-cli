@@ -1,4 +1,4 @@
-import { defineCustomElement } from '@tyler-components-web/core';
+import { defineCustomElement } from '@tylertech/forge-core';
 
 import { <%= data.componentClassName %>Component } from './<%= data.componentName %>';
 

@@ -1,10 +1,6 @@
-import { logWarn } from '@tylertech/forge-build-tools';
-
 import { IConfig } from './definitions';
 import { ICommand } from './command';
 import { ParsedArgs } from 'minimist';
-import { UpdateCommand } from '../commands/update/update-command';
-import { isOutdated } from '../utils/utils';
 
 const chalk = require('chalk');
 

@@ -9,13 +9,11 @@ import { HelpCommand } from '../commands/help/help-command';
 import { VersionCommand } from '../commands/version/version-command';
 import { LintCommand } from '../commands/lint/lint-command';
 import { GenerateCommand } from '../commands/generate/generate-command';
-import { ListCommand } from '../commands/list/list-command';
 import { NewCommand } from '../commands/new/new-command';
 import { BuildCommand } from '../commands/build/build-command';
 import { ServeCommand } from '../commands/serve/serve-command';
 import { TestCommand } from '../commands/test/test-command';
 import { BumpCommand } from '../commands/bump/bump-command';
-import { UpdateCommand } from '../commands/update/update-command';
 import { PublishCommand } from '../commands/publish/publish-command';
 
 export const AVAILABLE_COMMANDS: ICommand[] = [
@@ -23,13 +21,11 @@ export const AVAILABLE_COMMANDS: ICommand[] = [
   new VersionCommand(),
   new LintCommand(),
   new GenerateCommand(),
-  new ListCommand(),
   new NewCommand(),
   new BuildCommand(),
   new ServeCommand(),
   new TestCommand(),
   new BumpCommand(),
-  new UpdateCommand(),
   new PublishCommand()
 ];
 

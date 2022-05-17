@@ -1,5 +1,3 @@
-import chalk from 'chalk';
-
 import { ICommandParameter, ICommand } from '../../core/command';
 import { GenerateComponentCommand } from './generate-component-command';
 

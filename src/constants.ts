@@ -13,9 +13,9 @@ export const DEFAULT_DIST_DIR_NAME = 'dist';
 export const DEFAULT_FRAMEWORK_WRAPPER_DIR_NAME = 'framework-wrappers';
 export const BUILD_CONFIG_FILENAME = 'build.json';
 export const FULL_BUILD_DIR_NAME = 'lib';
-export const TEMP_BUILD_DIR_NAME = '.temp';
+export const TEMP_BUILD_DIR_NAME = 'staging';
 export const BUNDLE_OUTPUT_DIR_NAME = 'bundles';
-export const DEFAULT_NPM_REGISTRY = 'https://tylertech.jfrog.io/artifactory/api/npm/npm/';
+export const DEFAULT_NPM_REGISTRY = 'https://registry.npmjs.org/';
 export const DEFAULT_BUILD_TSCONFIG_NAME = 'tsconfig-build.json';
 
 /** The default project configuration to use. */
@@ -30,8 +30,6 @@ export const DEFAULT_PROJECT_CONFIG: IProjectConfig = {
   packageName: DEFAULT_PACKAGE_NAME,
   registry: DEFAULT_NPM_REGISTRY,
   license: {},
-  namedExports: {},
-  externalDependencies: {},
   templateVersion: CURRENT_TEMPLATE_VERSION,
   build: {
     webpack: {
