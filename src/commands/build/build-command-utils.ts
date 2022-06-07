@@ -129,7 +129,7 @@ export async function createDistributionPackage({
     const releaseDistDir = join(releaseRootDir, 'dist');
     const releaseEsmDir = join(releaseRootDir, 'esm');
     const releaseStylesDir = join(releaseRootDir, 'styles');
-    const releaseTypingsDir = join(releaseRootDir, 'typings');
+    const releaseTypingsDir = releaseEsmDir;
     const buildEsmDir = join(buildOutputDir, 'esm');
     const buildTypingsDir = join(buildOutputDir, 'typings');
     const buildCssDir = join(buildOutputDir, 'css');
@@ -181,7 +181,7 @@ export async function createDistributionPackage({
       repository,
       main: 'esm/index.js',
       module: 'esm/index.js',
-      typings: 'typings/index.d.ts',
+      typings: 'esm/index.d.ts',
       sideEffects: false,
       dependencies,
       peerDependencies
