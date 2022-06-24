@@ -133,11 +133,6 @@ export async function createProject(config: IConfig, options: INewCommandOptions
     },
     {
       type: InstallType.Template,
-      path: join(templateRoot, 'npmrc'),
-      outputPath: join(options.path, '.npmrc')
-    },
-    {
-      type: InstallType.Template,
       path: join(templateRoot, 'stylelintrc'),
       outputPath: join(options.path, '.stylelintrc')
     },
