@@ -1,4 +1,0 @@
-registry=<%= data.registry %>
-_auth=${ARTIFACTORY_TOKEN}
-email=${ARTIFACTORY_USERNAME}
-always-auth=true

@@ -2,7 +2,7 @@ import { task, series, src, dest, watch } from 'gulp';
 import { join, resolve } from 'canonical-path';
 import * as bs from 'browser-sync';
 import { CompilerOptions } from 'typescript';
-import { cleanDirectories, lintESLint, compileTypeScript, readJsonFile, modifyFile } from '@tylertech/forge-build-tools';
+import { cleanDirectories, lintESLint, compileTypeScript, readJsonFile, modifyFile, copyFilesAsync } from '@tylertech/forge-build-tools';
 import { findClosestOpenPort } from './src/utils/network';
 
 export const ROOT = __dirname;
@@ -25,8 +25,15 @@ task('clean:dist', () => cleanDirectories(DIST_ROOT));
 /** Copies the bin directory to the dist dir. */
 task('copy:bin', () => src(join(ROOT, 'bin/**/*'), { base: '.' }).pipe(dest(DIST_ROOT)));
 
-/** Copies the package.json to the dist dir. */
-task('copy:package.json', () => src(join(ROOT, 'package.json')).pipe(dest(DIST_ROOT)));
+/** Copies files to the dist dir. */
+task('copy', () => {
+  const files = [
+    join(ROOT, 'package.json'),
+    join(ROOT, 'README.md'),
+    join(ROOT, 'LICENSE')
+  ];
+  return copyFilesAsync(files, ROOT, DIST_ROOT);
+});
 
 /** Copies the schema files to the dist dir. */
 task('copy:schema', () => src(join(ROOT, 'config', '*schema.json')).pipe(dest(DIST_ROOT)));
@@ -47,7 +54,7 @@ task('fixup:package.json', async () => {
 task('copy:templates', () => src(join(ROOT, 'templates/**/*'), { dot: true, base: '.' }).pipe(dest(DIST_ROOT)));
 
 /** Copies the required cli assets to the dist directory. */
-task('copy:assets', series('copy:bin', 'copy:templates', 'copy:package.json', 'copy:schema', 'fixup:package.json'));
+task('copy:assets', series('copy:bin', 'copy:templates', 'copy', 'copy:schema', 'fixup:package.json'));
 
 /** Compiles the TypeScript in the CLI root directory. */
 task('compile:ts', async () => {

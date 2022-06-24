@@ -2,7 +2,7 @@
   "name": "@tylertech/forge-cli",
   "version": "2.0.0-rc.4",
   "description": "A command line interface for managing Forge Web Component projects.",
-  "repository": "tyler-technologies/forge-cli",
+  "repository": "tyler-technologies-oss/forge-cli",
   "bin": {
     "forge": "bin/forge"
   },
@@ -27,7 +27,7 @@
     "postversion": "cd dist && npm version $npm_package_version --no-git-tag-version --no-commit-hooks --ignore-scripts"
   },
   "dependencies": {
-    "@tylertech/forge-build-tools": "^2.0.0-rc.0",
+    "@tylertech/forge-build-tools": "^2.0.0",
     "autoprefixer": "^10.4.4",
     "browser-sync": "^2.27.9",
     "canonical-path": "^1.0.0",
@@ -81,7 +81,7 @@
     "@auto-it/npm": "^10.36.5",
     "@commitlint/cli": "^16.2.3",
     "@commitlint/config-conventional": "^16.2.1",
-    "@tylertech-eslint/eslint-plugin": "^1.0.8",
+    "@tylertech-eslint/eslint-plugin": "^1.0.9",
     "@types/browser-sync": "2.26.3",
     "@types/command-line-usage": "^5.0.2",
     "@types/deepmerge": "^2.2.0",
