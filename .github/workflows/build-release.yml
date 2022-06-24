@@ -19,6 +19,7 @@ on:
       - 'src/**/*'
       - 'templates/**/*'
       - 'test/**/*'
+  workflow_dispatch:
 
 concurrency: build-release-${{ github.ref }}
 
