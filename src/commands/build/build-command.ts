@@ -5,7 +5,7 @@ import { FULL_BUILD_DIR_NAME, TEMP_BUILD_DIR_NAME } from '../../constants';
 import { ICommand, ICommandOption, ICommandParameter } from '../../core/command';
 import { cleanup, IBuildTaskConfiguration, lintTask } from '../../utils/build-utils';
 import { assertBoolean, getTimeStamp } from '../../utils/utils';
-import { build, copyStaticDistributionAssets, createDistributionPackage, prebuild } from './build-command-utils';
+import { build, copyBundledDistributionAssets, createDistributionPackage, prebuild } from './build-command-utils';
 
 /** The command definition for the main library build. */
 export class BuildCommand implements ICommand {
@@ -67,6 +67,6 @@ export async function buildCommand(ctx: IBuildTaskConfiguration): Promise<void> 
   await prebuild({ buildRoot, buildDir: buildRoot, buildOutputDir, srcDir, quiet: ctx.quiet });
   await build({ config: ctx, buildOutputDir, quiet: ctx.quiet });
   await createDistributionPackage({ config: ctx, packageJson, buildOutputDir });
-  await copyStaticDistributionAssets({ config: ctx, packageJson, buildOutputDir });
+  await copyBundledDistributionAssets({ config: ctx, packageJson, buildOutputDir });
   await cleanup(buildOutputDir, ctx.quiet);
 }

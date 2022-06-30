@@ -98,8 +98,8 @@ export async function build({
     await compileTypeScriptTask(config, stagingSrcDir, stagingSrcDir, esmBuildDir, ts.ScriptTarget.ES2017, ts.ModuleKind.ES2015, true, typingsDir);
   }, quiet);
 
-  // 
-  await runTask('Generating ES module distribution sources...', async () => {
+  // Bundles the library with code-splitting to generate a self-contained ESM distribution
+  await runTask('Bundling ESM distribution sources...', async () => {
     // Build the library entry points
     const libEntry = join(stagingSrcDir, `${entryName}.ts`);
     const componentEntries = await globFilesAsync(join(stagingSrcDir, '**/index.ts')) as string[];
@@ -129,11 +129,13 @@ export async function createDistributionPackage({
     const releaseDistDir = join(releaseRootDir, 'dist');
     const releaseEsmDir = join(releaseRootDir, 'esm');
     const releaseStylesDir = join(releaseRootDir, 'styles');
+    const releaseDistEsmDir = join(releaseDistDir, 'esm');
     const releaseTypingsDir = releaseEsmDir;
     const buildEsmDir = join(buildOutputDir, 'esm');
     const buildTypingsDir = join(buildOutputDir, 'typings');
     const buildCssDir = join(buildOutputDir, 'css');
     const buildSrcDir = join(buildOutputDir, 'src');
+    const esbuildOutputDir = join(buildOutputDir, 'esbuild');
 
     // Clean previous release build
     await deleteDir(config.paths.distReleaseDir);
@@ -142,6 +144,7 @@ export async function createDistributionPackage({
     await mkdirp(releaseRootDir);
     await mkdirp(releaseDistDir);
     await mkdirp(releaseEsmDir);
+    await mkdirp(releaseDistEsmDir);
     await mkdirp(releaseStylesDir);
     await mkdirp(releaseTypingsDir);
 
@@ -151,6 +154,7 @@ export async function createDistributionPackage({
     // Copy files from build output to the package structure
     const fileConfigs: IFileCopyConfig[] = [
       { path: join(buildEsmDir, '**/*.js*'), rootPath: buildEsmDir, outputPath: releaseEsmDir },
+      { path: join(esbuildOutputDir, '**/*.js*'), rootPath: esbuildOutputDir, outputPath: releaseDistEsmDir },
       { path: join(buildTypingsDir, '**/*.d.ts'), rootPath: buildTypingsDir, outputPath: releaseTypingsDir },
       { path: join(buildCssDir, '**/*.css'), rootPath: buildCssDir, outputPath: releaseDistDir },
       { path: join(buildSrcDir, '**/*.scss'), rootPath: buildSrcDir, outputPath: releaseStylesDir },
@@ -192,7 +196,7 @@ export async function createDistributionPackage({
 }
 
 /** Copies assets from the package dist directory to the static distribution directory. */
-export async function copyStaticDistributionAssets({
+export async function copyBundledDistributionAssets({
   config,
   packageJson,
   buildOutputDir
