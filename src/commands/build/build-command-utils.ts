@@ -1,6 +1,5 @@
 import { join, parse, resolve } from 'canonical-path';
 import ts from 'typescript';
-import * as semver from 'semver';
 import {
   copyFilesAsync,
   copyFilesMultiple,
