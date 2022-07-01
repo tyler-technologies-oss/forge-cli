@@ -208,8 +208,7 @@ export async function copyBundledDistributionAssets({
   return runTask('Copying static distribution assets...', async () => {
     const jsBuildDir = join(buildOutputDir, 'esbuild');
     const cssBuildDir = join(buildOutputDir, 'css');
-    const majorVersionNumber = semver.major(packageJson.version);
-    const staticOutputDir = join(config.paths.distDir, config.context.build.static.distPath, `${packageJson.name}@v${majorVersionNumber}`);
+    const staticOutputDir = join(config.paths.distDir, config.context.build.static.distPath, packageJson.name);
 
     // Clean previous build
     await deleteDir(staticOutputDir);
