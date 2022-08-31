@@ -116,9 +116,9 @@
           "type": "string",
           "description": "Optional config file to provide to the analyzer to customize generation of the custom elements manifest."
         },
-        "disabled": {
+        "disableAutoGeneration": {
           "type": "boolean",
-          "description": "Disables custom elements manifest generation.",
+          "description": "Disables automatic generation of the custom elements manifest as part of the build.",
           "default": "false"
         }
       }

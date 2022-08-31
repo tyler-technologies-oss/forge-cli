@@ -15,6 +15,7 @@ import { ServeCommand } from '../commands/serve/serve-command';
 import { TestCommand } from '../commands/test/test-command';
 import { BumpCommand } from '../commands/bump/bump-command';
 import { PublishCommand } from '../commands/publish/publish-command';
+import { CustomElementsManifestCommand } from '../commands/custom-elements-manifest/custom-elements-manifest';
 
 export const AVAILABLE_COMMANDS: ICommand[] = [
   new HelpCommand(),
@@ -26,7 +27,8 @@ export const AVAILABLE_COMMANDS: ICommand[] = [
   new ServeCommand(),
   new TestCommand(),
   new BumpCommand(),
-  new PublishCommand()
+  new PublishCommand(),
+  new CustomElementsManifestCommand()
 ];
 
 /**

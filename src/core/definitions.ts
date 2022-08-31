@@ -40,7 +40,7 @@ export interface IProjectConfig {
 
 export interface ICustomElementsManifestConfig {
   configFileName?: string;
-  disabled?: boolean;
+  disableAutoGeneration?: boolean;
 }
 
 export interface IProjectLicenseConfig {

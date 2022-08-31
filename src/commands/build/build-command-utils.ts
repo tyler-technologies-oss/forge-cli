@@ -23,6 +23,7 @@ import {
   inlineContentTask,
   resolveBuildJson
 } from '../../utils/build-utils';
+import { generateCustomElementsManifest } from '../../utils/manifest-utils';
 
 /**
  * Prepares the staging directory for a new build of the library.
@@ -113,18 +114,9 @@ export async function build({
   });
 
   // Generates Custom Elements Manifest file.
-  if (!config.context.customElementsManifestConfig?.disabled) {
+  if (!config.context.customElementsManifestConfig?.disableAutoGeneration) {
     await runTask('Generating custom elements manifest...', async () => {
-      let cmd = 'npx custom-elements-manifest analyze';
-
-      if (config.context.customElementsManifestConfig?.configFileName) {
-        cmd += `--config ${config.context.customElementsManifestConfig.configFileName}`;
-      } else {
-        cmd += ` --globs "**/*.ts"`;
-      }
-
-
-      return await runCommand(cmd, stagingSrcDir, false);
+      await generateCustomElementsManifest(config.context, stagingSrcDir);
     });
   }
 }
@@ -168,7 +160,7 @@ export async function createDistributionPackage({
     await appendLicenseHeaders(config, join(buildOutputDir, '**/*.*(js|scss|css|d.ts)'));
 
     // Copy files from build output to the package structure
-    const customElementsFiles = config.context.customElementsManifestConfig?.disabled
+    const customElementsFiles = config.context.customElementsManifestConfig?.disableAutoGeneration
       ? []
       : [{ path: join(buildSrcDir, 'custom-elements.json'), rootPath: buildSrcDir, outputPath: releaseRootDir }];
     const fileConfigs: IFileCopyConfig[] = [
@@ -196,7 +188,7 @@ export async function createDistributionPackage({
 
     // Generate a package.json for the package
     const { name, version, description, author, license, repository, dependencies, peerDependencies } = packageJson;
-    const customElements = config.context.customElementsManifestConfig?.disabled ? {} : { customElements: 'custom-elements.json' };
+    const customElements = config.context.customElementsManifestConfig?.disableAutoGeneration ? {} : { customElements: 'custom-elements.json' };
     const distPackageJson = {
       name,
       description,
