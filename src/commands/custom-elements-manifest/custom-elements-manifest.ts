@@ -21,7 +21,14 @@ export class CustomElementsManifestCommand implements ICommand {
     const start = process.hrtime();
     Logger.info(`[${getTimeStamp()}] Custom Elements Manifest generation started...`);
 
-    await generateCustomElementsManifest(param.config.context, param.config.cwd, param.args.config);
+    await generateCustomElementsManifest(
+      param.config.context,
+      param.config.context.paths.libDir,
+      {
+        configFileName: param.args.config,
+        outDir: param.config.cwd
+      }
+    );
 
     const elapsed = process.hrtime(start);
 
