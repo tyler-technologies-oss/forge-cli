@@ -8,6 +8,7 @@ import {
   IFileCopyConfig,
   IPackageJson,
   mkdirp,
+  runCommand,
   runTask,
   writeFileAsync
 } from '@tylertech/forge-build-tools';
@@ -84,7 +85,7 @@ export async function build({
     // Compile all Sass files across the library as these may be referenced components or other Sass files
     // Note: we can't guarantee or make any assumptions that there isn't duplication of work with the step above unfortunately...
     await compileSassTask(stagingSrcDir, stagingSrcDir);
-    
+
     // Replace the .scss imports with .css extension in the staging files to allow our inline content task to execute
     await fixupRequireSassTask(stagingSrcDir);
 
@@ -110,6 +111,22 @@ export async function build({
       entryPoints: [libEntry, ...componentEntries]
     });
   });
+
+  // Generates Custom Elements Manifest file.
+  if (!config.context.customElementsManifestConfig?.disabled) {
+    await runTask('Generating custom elements manifest...', async () => {
+      let cmd = 'npx custom-elements-manifest analyze';
+
+      if (config.context.customElementsManifestConfig?.configFileName) {
+        cmd += `--config ${config.context.customElementsManifestConfig.configFileName}`;
+      } else {
+        cmd += ` --globs "**/*.ts"`;
+      }
+
+
+      return await runCommand(cmd, stagingSrcDir, false);
+    });
+  }
 }
 
 export async function createDistributionPackage({
@@ -151,6 +168,9 @@ export async function createDistributionPackage({
     await appendLicenseHeaders(config, join(buildOutputDir, '**/*.*(js|scss|css|d.ts)'));
 
     // Copy files from build output to the package structure
+    const customElementsFiles = config.context.customElementsManifestConfig?.disabled
+      ? []
+      : [{ path: join(buildSrcDir, 'custom-elements.json'), rootPath: buildSrcDir, outputPath: releaseRootDir }];
     const fileConfigs: IFileCopyConfig[] = [
       { path: join(buildEsmDir, '**/*.js*'), rootPath: buildEsmDir, outputPath: releaseEsmDir },
       { path: join(esbuildOutputDir, '**/*.js*'), rootPath: esbuildOutputDir, outputPath: releaseDistEsmDir },
@@ -158,7 +178,8 @@ export async function createDistributionPackage({
       { path: join(buildCssDir, '**/*.css'), rootPath: buildCssDir, outputPath: releaseDistDir },
       { path: join(buildSrcDir, '**/*.scss'), rootPath: buildSrcDir, outputPath: releaseStylesDir },
       { path: join(projectRootDir, 'README.md'), rootPath: projectRootDir, outputPath: releaseRootDir },
-      { path: join(projectRootDir, 'LICENSE'), rootPath: projectRootDir, outputPath: releaseRootDir }
+      { path: join(projectRootDir, 'LICENSE'), rootPath: projectRootDir, outputPath: releaseRootDir },
+      ...customElementsFiles
     ];
 
     // Check if there are any project-specified files that need to be copied to the package
@@ -175,6 +196,7 @@ export async function createDistributionPackage({
 
     // Generate a package.json for the package
     const { name, version, description, author, license, repository, dependencies, peerDependencies } = packageJson;
+    const customElements = config.context.customElementsManifestConfig?.disabled ? {} : { customElements: 'custom-elements.json' };
     const distPackageJson = {
       name,
       description,
@@ -187,7 +209,8 @@ export async function createDistributionPackage({
       typings: 'esm/index.d.ts',
       sideEffects: false,
       dependencies,
-      peerDependencies
+      peerDependencies,
+      ...customElements
     };
     const data = JSON.stringify(distPackageJson, null, 2);
     await writeFileAsync(join(releaseRootDir, 'package.json'), data, 'utf8');

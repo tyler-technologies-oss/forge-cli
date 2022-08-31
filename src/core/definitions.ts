@@ -35,6 +35,12 @@ export interface IProjectConfig {
   build: IBuildProjectConfig;
   karma: IKarmaProjectConfig;
   packageConfig: IPackageConfig;
+  customElementsManifestConfig: ICustomElementsManifestConfig;
+}
+
+export interface ICustomElementsManifestConfig {
+  configFileName?: string;
+  disabled?: boolean;
 }
 
 export interface IProjectLicenseConfig {

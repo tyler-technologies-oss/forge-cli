@@ -45,6 +45,7 @@ export const DEFAULT_PROJECT_CONFIG: IProjectConfig = {
     }
   },
   packageConfig: {},
+  customElementsManifestConfig: {},
   karma: {},
   paths: {
     rootDir: '.',
