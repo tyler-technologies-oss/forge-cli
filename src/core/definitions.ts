@@ -35,6 +35,12 @@ export interface IProjectConfig {
   build: IBuildProjectConfig;
   karma: IKarmaProjectConfig;
   packageConfig: IPackageConfig;
+  customElementsManifestConfig: ICustomElementsManifestConfig;
+}
+
+export interface ICustomElementsManifestConfig {
+  configFileName?: string;
+  disableAutoGeneration?: boolean;
 }
 
 export interface IProjectLicenseConfig {
@@ -118,6 +124,7 @@ export interface IProjectConfigPaths {
   distDemoDir: string;
   distStylesDir: string;
   distReleaseDir: string;
+  distMetadataDir: string;
   srcDir: string;
   libDir: string;
   testDir: string;

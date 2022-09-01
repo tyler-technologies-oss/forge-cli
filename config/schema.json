@@ -38,6 +38,12 @@
     "packageName": {
       "$ref": "#/definitions/packageName"
     },
+    "packageConfig": {
+      "$ref": "#/definitions/packageConfig"
+    },
+    "customElementsManifestConfig": {
+      "$ref": "#/definitions/customElementsManifestConfig"
+    },
     "registry": {
       "$ref": "#/definitions/registry"
     },
@@ -100,6 +106,57 @@
     "packageName": {
       "type": "string",
       "description": "The base npm package name."
+    },
+    "customElementsManifestConfig": {
+      "type": "object",
+      "description": "The name of the build configuration file optionally located in each component directory that is used for specifying build options.",
+      "additionalProperties": false,
+      "properties": {
+        "configFileName": {
+          "type": "string",
+          "description": "Optional config file to provide to the analyzer to customize generation of the custom elements manifest."
+        },
+        "disableAutoGeneration": {
+          "type": "boolean",
+          "description": "Disables automatic generation of the custom elements manifest as part of the build.",
+          "default": "false"
+        }
+      }
+    },
+    "packageConfig": {
+      "type": "object",
+      "description": "Additional package-level configuration.",
+      "additionalProperties": false,
+      "properties": {
+        "copyFiles": {
+          "type": "array",
+          "description": "Additional files to include in the built package.",
+          "items": {
+            "type": "object",
+            "description": "A copy file descriptor.",
+            "additionalProperties": false,
+            "required": [
+              "pattern",
+              "root",
+              "output"
+            ],
+            "properties": {
+              "pattern": {
+                "type": "string",
+                "description": "A file name or glob pattern of files to include."
+              },
+              "root": {
+                "type": "string",
+                "description": "The directory relative to project root in which to apply the pattern."
+              },
+              "output": {
+                "type": "string",
+                "description": "The target path to copy the file to, relative to the release root directory."
+              }
+            }
+          }
+        }
+      }
     },
     "registry": {
       "type": "string",
@@ -361,6 +418,11 @@
           "type": "string",
           "description": "The path to the npm package output directory.",
           "default": "dist/release"
+        },
+        "distMetadataDir": {
+          "type": "string",
+          "description": "The path to output metadata files.",
+          "default": "dist/metadata"
         },
         "srcDir": {
           "type": "string",

@@ -45,6 +45,7 @@ export const DEFAULT_PROJECT_CONFIG: IProjectConfig = {
     }
   },
   packageConfig: {},
+  customElementsManifestConfig: {},
   karma: {},
   paths: {
     rootDir: '.',
@@ -53,6 +54,7 @@ export const DEFAULT_PROJECT_CONFIG: IProjectConfig = {
     distDemoDir: `${DEFAULT_DIST_DIR_NAME}/${DEFAULT_DEMO_DIR_NAME}`,
     distStylesDir: `${DEFAULT_DIST_DIR_NAME}/styles`,
     distReleaseDir: `${DEFAULT_DIST_DIR_NAME}/release`,
+    distMetadataDir: `${DEFAULT_DIST_DIR_NAME}/metadata`,
     srcDir: DEFAULT_SRC_DIR_NAME,
     libDir: `${DEFAULT_SRC_DIR_NAME}/${DEFAULT_LIB_DIR_NAME}`,
     testDir: `${DEFAULT_SRC_DIR_NAME}/${DEFAULT_TEST_DIR_NAME}`,

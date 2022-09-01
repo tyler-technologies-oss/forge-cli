@@ -1,4 +1,5 @@
 import { ICommandParameter, ICommand } from '../../core/command';
+import { CustomElementsManifestCommand } from './custom-elements-manifest';
 import { GenerateComponentCommand } from './generate-component-command';
 
 /**
@@ -10,7 +11,8 @@ export class GenerateCommand implements ICommand {
   public alias = 'g';
   public description = 'To view the available sub-commands type `forge help generate`.';
   public subCommands: ICommand[] = [
-    new GenerateComponentCommand()
+    new GenerateComponentCommand(),
+    new CustomElementsManifestCommand()
   ];
 
   public async run(param: ICommandParameter): Promise<void> {
