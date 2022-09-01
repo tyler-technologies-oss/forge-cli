@@ -1,3 +1,15 @@
+# v2.3.0 (Thu Sep 01 2022)
+
+#### 🚀 Enhancement
+
+- feat(generate): generate custom elements manifest [#8](https://github.com/tyler-technologies-oss/forge-cli/pull/8) ([@MikeMatusz](https://github.com/MikeMatusz))
+
+#### Authors: 1
+
+- Mike Matuszak ([@MikeMatusz](https://github.com/MikeMatusz))
+
+---
+
 # v2.2.0 (Fri Jul 01 2022)
 
 #### 🚀 Enhancement
