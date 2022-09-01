@@ -1,3 +1,4 @@
+import { relative } from 'canonical-path';
 import { formatHrTime, Logger } from '@tylertech/forge-build-tools';
 import chalk from 'chalk';
 import { ICommand, ICommandOption, ICommandParameter } from '../../core/command';
@@ -26,17 +27,19 @@ export class CustomElementsManifestCommand implements ICommand {
     const start = process.hrtime();
     Logger.info(`[${getTimeStamp()}] Custom Elements Manifest generation started...`);
 
+    const outDir = args.outdir ?? config.context.paths.distMetadataDir;
     await generateCustomElementsManifest(
       config.context,
       config.context.paths.libDir,
       {
         configFileName: args.config,
-        outDir: args.outdir ?? config.context.paths.distMetadataDir
+        outDir
       }
     );
 
-    const elapsed = process.hrtime(start);
+    Logger.info(`[${getTimeStamp()}] File created at: ${chalk.yellow(`${relative(config.context.paths.rootDir, outDir)}/custom-elements.json`)}`);
 
+    const elapsed = process.hrtime(start);
     Logger.success(`[${getTimeStamp()}] Created Custom Elements Manifest in ${chalk.dim(`in ${formatHrTime(elapsed)}`)}`);
   }
 }
