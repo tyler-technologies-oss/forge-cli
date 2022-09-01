@@ -14,6 +14,11 @@ export class CustomElementsManifestCommand implements ICommand {
       name: 'config',
       type: String,
       description: 'The path to a custom config file. Will override any project-level configuration.'
+    },
+    {
+      name: 'outdir',
+      type: String,
+      description: 'The directory to output the manifest.  Defaults to the metadata directory specified in project-level configuration.'
     }
   ];
 
@@ -26,7 +31,7 @@ export class CustomElementsManifestCommand implements ICommand {
       config.context.paths.libDir,
       {
         configFileName: args.config,
-        outDir: config.context.paths.distMetadataDir
+        outDir: args.outdir ?? config.context.paths.distMetadataDir
       }
     );
 

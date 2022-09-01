@@ -419,6 +419,11 @@
           "description": "The path to the npm package output directory.",
           "default": "dist/release"
         },
+        "distMetadataDir": {
+          "type": "string",
+          "description": "The path to output metadata files.",
+          "default": "dist/metadata"
+        },
         "srcDir": {
           "type": "string",
           "description": "The path to the source directory.",
