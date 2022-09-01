@@ -124,6 +124,7 @@ export interface IProjectConfigPaths {
   distDemoDir: string;
   distStylesDir: string;
   distReleaseDir: string;
+  distMetadataDir: string;
   srcDir: string;
   libDir: string;
   testDir: string;

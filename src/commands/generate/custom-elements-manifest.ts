@@ -13,20 +13,20 @@ export class CustomElementsManifestCommand implements ICommand {
     {
       name: 'config',
       type: String,
-      description: 'The path to a custom config file.  Will override any project-level configuration.'
+      description: 'The path to a custom config file. Will override any project-level configuration.'
     }
   ];
 
-  public async run(param: ICommandParameter): Promise<void> {
+  public async run({ config, args }: ICommandParameter): Promise<void> {
     const start = process.hrtime();
     Logger.info(`[${getTimeStamp()}] Custom Elements Manifest generation started...`);
 
     await generateCustomElementsManifest(
-      param.config.context,
-      param.config.context.paths.libDir,
+      config.context,
+      config.context.paths.libDir,
       {
-        configFileName: param.args.config,
-        outDir: param.config.cwd
+        configFileName: args.config,
+        outDir: config.context.paths.distMetadataDir
       }
     );
 
