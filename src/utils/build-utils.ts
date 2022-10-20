@@ -82,6 +82,7 @@ export async function generateStaticESModuleSources({
     chunkNames: 'chunks/[name].[hash]',
     sourcemap: true,
     bundle: true,
+    minify: true,
     metafile,
     outdir,
     external
