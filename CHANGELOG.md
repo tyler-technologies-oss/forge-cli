@@ -1,3 +1,15 @@
+# v2.3.1 (Thu Oct 20 2022)
+
+#### 🐛 Bug Fix
+
+- fix(build): fix to re-enable minification of ESM distribution files [#9](https://github.com/tyler-technologies-oss/forge-cli/pull/9) ([@DRiFTy17](https://github.com/DRiFTy17))
+
+#### Authors: 1
+
+- Kieran Nichols ([@DRiFTy17](https://github.com/DRiFTy17))
+
+---
+
 # v2.3.0 (Thu Sep 01 2022)
 
 #### 🚀 Enhancement
