@@ -98,7 +98,7 @@ export async function generateStaticESModuleSources({
  * @param outputDir The output location for the built JavaScript files.
  */
 export async function fixupRequireSassTask(outputDir: string): Promise<void> {
-  await modifyFile(join(outputDir, '**/*.{ts,js}'), info => info.contents.replace(/(.)(scss)(['"])/g, '$1css$3'));
+  await modifyFile(join(outputDir, '**/*.{ts,js}'), info => info.contents.replace(/(.)(scss(\?inline)?)(['"])/g, '$1css$4'));
 }
 
 /**
@@ -106,18 +106,22 @@ export async function fixupRequireSassTask(outputDir: string): Promise<void> {
  * @param outputDir 
  */
 export async function inlineContentTask(outputDir: string): Promise<void> {
-  const importRegex = /import(.*)from ['"](\.\.?\/[^'"]+\.(?:html|s?css))['"]/g;
+  const importRegex = /import(.*)from ['"](\.\.?\/[^'"]+\.(?:html|s?css(\?inline)?))['"]/g;
 
   await modifyFile(join(outputDir, '**/*.{ts,js}'), async info => {
     const dirpath = dirname(info.filepath);
     
     return info.contents.replace(importRegex, (match, $1, $2) => {
-      const requiredFilePath = resolve(dirpath, $2);
+      let requiredFilePath = resolve(dirpath, $2);
       const extension = extname(requiredFilePath);
-      const isValidMatch = ['.css', '.scss', '.html'].includes(extension);
-      
+      const isValidMatch = ['.css', '.scss', '.scss?inline', '.html'].includes(extension);
+
       if (!isValidMatch) {
         return match;
+      }
+
+      if (requiredFilePath.includes('?inline')) {
+        requiredFilePath = requiredFilePath.replace('?inline', '');
       }
 
       let fileContents = readFileSync(requiredFilePath, 'utf8').toString();
