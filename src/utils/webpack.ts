@@ -4,7 +4,7 @@ import { findUp } from './utils.js';
 import { IDevtoolConfig } from '../core/definitions.js';
 import { CleanWebpackPlugin } from 'clean-webpack-plugin';
 import TerserPlugin from 'terser-webpack-plugin';
-import sass from 'sass';
+import * as sass from 'sass';
 import { fileURLToPath } from 'url';
 
 const { BannerPlugin, DefinePlugin } = webpack;

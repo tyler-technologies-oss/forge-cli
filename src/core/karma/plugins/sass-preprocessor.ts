@@ -13,8 +13,10 @@
 import * as dartSass from 'sass';
 import * as path from 'path';
 import chalk from 'chalk';
-import { clone, merge } from 'lodash';
+import lodash from 'lodash';
 import stripAnsi from 'strip-ansi';
+
+const { clone, merge } = lodash;
 
 function formattedScssMessage(error, file): string {
   const filePath = !error || !error.file || error.file === 'stdin' ? file.path : error.file;
@@ -94,5 +96,3 @@ createScssPreprocessor.$inject = ['args', 'config.scssPreprocessor', 'logger'];
 export default {
   'preprocessor:scss': ['factory', createScssPreprocessor]
 };
-
-module.exports = exports.default;
