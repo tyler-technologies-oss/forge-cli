@@ -3,8 +3,8 @@ import commandLineUsage from 'command-line-usage';
 import { ParsedArgs } from 'minimist';
 import { Logger } from '@tylertech/forge-build-tools';
 
-import { ICommand, ICommandParameter } from '../../core/command';
-import { VersionCommand } from '../version/version-command';
+import { ICommand, ICommandParameter } from '../../core/command.js';
+import { VersionCommand } from '../version/version-command.js';
 
 const CLI_TITLE = 'Forge CLI';
 const CLI_DESCRIPTION = 'The CLI utility for supporting Forge Web Component projects.';

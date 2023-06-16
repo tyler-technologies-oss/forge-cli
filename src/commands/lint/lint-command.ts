@@ -1,7 +1,7 @@
-import { ICommand, ICommandParameter } from '../../core/command';
-import { LintESLintCommand } from './lint-eslint';
-import { LintStylesCommand } from './lint-styles-command';
-import { lintESLintTask, lintStyleSheetsTask } from '../../utils/lint-utils';
+import { ICommand, ICommandParameter } from '../../core/command.js';
+import { LintESLintCommand } from './lint-eslint.js';
+import { LintStylesCommand } from './lint-styles-command.js';
+import { lintESLintTask, lintStyleSheetsTask } from '../../utils/lint-utils.js';
 
 export class LintCommand implements ICommand {
   public name = 'lint';

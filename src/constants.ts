@@ -1,4 +1,4 @@
-import { IProjectConfig } from './core/definitions';
+import { IProjectConfig } from './core/definitions.js';
 
 export const DEFAULT_PACKAGE_ORG = '@tylertech';
 export const DEFAULT_PACKAGE_NAME = 'forge';

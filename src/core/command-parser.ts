@@ -1,8 +1,7 @@
-import { IConfig } from './definitions';
-import { ICommand } from './command';
+import { IConfig } from './definitions.js';
+import { ICommand } from './command.js';
 import { ParsedArgs } from 'minimist';
-
-const chalk = require('chalk');
+import chalk from 'chalk';
 
 export interface ICommandParameter {
   args: ParsedArgs;

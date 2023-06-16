@@ -1,11 +1,13 @@
 import { camelCase, dashify, ensureDir, existsAsync, FileTemplateData, InstallFileDescriptor, installFiles, InstallType, Logger, readFileAsync, writeFileAsync } from '@tylertech/forge-build-tools';
-import { join, relative } from 'canonical-path';
+import cpath from 'canonical-path';
 import chalk from 'chalk';
 import { chmodSync } from 'fs';
-import { DEFAULT_COMPONENT_PREFIX, TEMPLATE_INTERPOLATION_REGEX } from '../../constants';
-import { ICommand, ICommandArg, ICommandOption, ICommandParameter } from '../../core/command';
-import { IConfig } from '../../core/definitions';
-import { assertBoolean, printInstallationSummary } from '../../utils/utils';
+import { DEFAULT_COMPONENT_PREFIX, TEMPLATE_INTERPOLATION_REGEX } from '../../constants.js';
+import { ICommand, ICommandArg, ICommandOption, ICommandParameter } from '../../core/command.js';
+import { IConfig } from '../../core/definitions.js';
+import { assertBoolean, printInstallationSummary } from '../../utils/utils.js';
+
+const { join, relative } = cpath;
 
 export interface IGenerateComponentCommandOptions {
   spec: boolean;
@@ -212,14 +214,14 @@ async function exportComponent(config: IConfig, indexDir: string, componentName:
 function addExport(contents: string, componentName: string): string {
   // If the file is empty (whitespace characters only), then just put the export statement in
   if (/^\s*$/.test(contents)) {
-    return `export * from './${componentName}';\n`;
+    return `export * from './${componentName}.js';\n`;
   }
 
   const lastExportRegExp = /(^(?:[\s\S]*\n)?export\s+\*\s+.*(?:\r?\n|\r))/;
 
   if (contents.match(lastExportRegExp)) {
-    return contents.replace(lastExportRegExp, `$1export * from './${componentName}';\n`);
+    return contents.replace(lastExportRegExp, `$1export * from './${componentName}.js';\n`);
   }
 
-  return `${contents}\n\nexport * from './${componentName}';\n`;
+  return `${contents}\n\nexport * from './${componentName}.js';\n`;
 }

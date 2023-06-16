@@ -1,10 +1,9 @@
-import { dirname, extname, join, relative, resolve } from 'canonical-path';
-import chalk from 'chalk';
+import cpath from 'canonical-path';
 import esbuild from 'esbuild';
 import { readFileSync } from 'fs';
-import * as ts from 'typescript';
-import { IProjectConfig, IProjectConfigPaths } from '../core/definitions';
-import { lintESLintDirectory, lintStyleSheetsDirectory } from './lint-utils';
+import ts from 'typescript';
+import { IProjectConfig, IProjectConfigPaths } from '../core/definitions.js';
+import { lintESLintDirectory, lintStyleSheetsDirectory } from './lint-utils.js';
 import {
   absolutify,
   compileSass,
@@ -21,8 +20,9 @@ import {
   runTask,
   writeFileAsync
 } from '@tylertech/forge-build-tools';
+import jsStringEscape from 'js-string-escape';
 
-const jsStringEscape = require('js-string-escape');
+const { dirname, extname, join, relative, resolve } = cpath;
 
 export interface IBuildTaskConfiguration {
   context: IProjectConfig;
@@ -276,8 +276,9 @@ export async function resolveBuildJson(dir: string): Promise<IBuildJson> {
 
     return buildJson;
   } catch (e) {
-    Logger.error(`Unable to read build.json file at "${dir}".\n\n${chalk.red(e.message)}`);
-    throw e;
+    return {
+      entry: './index.ts' // TODO: allow for customization of default path through project context configuration
+    };
   }
 }
 

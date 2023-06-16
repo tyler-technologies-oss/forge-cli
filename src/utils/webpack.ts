@@ -1,10 +1,13 @@
 import { resolve } from 'path';
-import { BannerPlugin, Configuration, DefinePlugin } from 'webpack';
-import { findUp } from './utils';
-import { IDevtoolConfig } from '../core/definitions';
+import webpack, { Configuration } from 'webpack';
+import { findUp } from './utils.js';
+import { IDevtoolConfig } from '../core/definitions.js';
+import { CleanWebpackPlugin } from 'clean-webpack-plugin';
+import TerserPlugin from 'terser-webpack-plugin';
+import sass from 'sass';
+import { fileURLToPath } from 'url';
 
-const CleanWebpackPlugin = require('clean-webpack-plugin');
-const TerserPlugin = require('terser-webpack-plugin');
+const { BannerPlugin, DefinePlugin } = webpack;
 
 export type WebpackConfigurationFactory = (env: IWebpackEnv) => Configuration;
 
@@ -40,7 +43,7 @@ export function getWebpackConfigurationFactory(): WebpackConfigurationFactory {
       env.mode = 'production';
     }
 
-    const cliNodeModules = findUp('node_modules', __dirname);
+    const cliNodeModules = findUp('node_modules', fileURLToPath(import.meta.url));
 
     if (!cliNodeModules) {
       throw new Error('Unable to locate the node_modules folder for the CLI.');
@@ -133,7 +136,7 @@ export function getWebpackConfigurationFactory(): WebpackConfigurationFactory {
                 loader: 'sass-loader',
                 options: {
                   webpackImporter: env.sassLoaderWebpackImporter,
-                  implementation: require('sass'),
+                  implementation: sass,
                   sassOptions: {
                     includePaths: [resolve(env.root, 'node_modules')]
                   }
@@ -184,7 +187,7 @@ export function getWebpackConfigurationFactory(): WebpackConfigurationFactory {
     }
 
     if (env.clean) {
-      config.plugins?.push(new CleanWebpackPlugin([env.outputDir], { verbose: false }));
+      config.plugins?.push(new CleanWebpackPlugin({ cleanOnceBeforeBuildPatterns: [env.outputDir], verbose: false }));
     }
 
     if (env.externals) {

@@ -1,11 +1,28 @@
-import { absolutify, existsSync, Logger } from '@tylertech/forge-build-tools';
-import { join } from 'canonical-path';
-import { ConfigOptions, constants, FilePattern, Server } from 'karma';
+import { absolutify, Logger } from '@tylertech/forge-build-tools';
+import karma, { ConfigOptions, constants, FilePattern } from 'karma';
 import { sep, resolve as pathResolve } from 'path';
-import { Configuration, SourceMapDevToolPlugin } from 'webpack';
-import { IConfig } from '../core/definitions';
-import { findUp } from './utils';
+import wepback, { Configuration } from 'webpack';
+import { IConfig } from '../core/definitions.js';
+import { findUp } from './utils.js';
 import { TsconfigPathsPlugin } from 'tsconfig-paths-webpack-plugin';
+
+import sass from 'sass';
+import karmaJasmine from 'karma-jasmine';
+import karmaWebpack from 'karma-webpack';
+import karmaSourcemapLoader from 'karma-sourcemap-loader';
+import karmaSpecReporter from 'karma-spec-reporter';
+import karmaJasmineHtmlReporter from 'karma-jasmine-html-reporter';
+import karmaHTML2JSPreprocess from 'karma-html2js-preprocessor';
+import karmaJasmineOrderReporter from 'karma-jasmine-order-reporter';
+import karmaChromeLauncher from 'karma-chrome-launcher';
+import karmaFirefoxLauncher from 'karma-firefox-launcher';
+import karmaCoverageIstanbulReporter from 'karma-coverage-istanbul-reporter';
+
+const { SourceMapDevToolPlugin } = wepback;
+const { Server } = karma;
+
+import sassPreprocessor from '../core/karma/plugins/sass-preprocessor.js';
+import { fileURLToPath } from 'url';
 
 export interface ITestEnv {
   components?: string[];
@@ -58,28 +75,25 @@ export function generateKarmaConfig(config: IConfig, browsers: string | string[]
   browsers = normalizeKarmaBrowsers(browsers);
   const browserLauncherPlugins: string[] = [];
 
-  // Add the browser launcher plugins based on the browers that are requested
+  // Add the browser launcher plugins based on the browsers that are requested
   if (browsers.some(b => b === 'Chrome' || b === 'ChromeHeadless')) {
-    browserLauncherPlugins.push(require('karma-chrome-launcher'));
+    browserLauncherPlugins.push(karmaChromeLauncher);
   }
   if (browsers.some(b => b === 'Firefox')) {
-    browserLauncherPlugins.push(require('karma-firefox-launcher'));
-  }
-  if (browsers.some(b => b === 'Edge')) {
-    browserLauncherPlugins.push(require('karma-edge-launcher'));
+    browserLauncherPlugins.push(karmaFirefoxLauncher);
   }
 
   const options: IKarmaOptions = {
     basePath: config.context.paths.rootDir,
     frameworks: ['jasmine', 'webpack'],
     plugins: [
-      require('karma-jasmine'),
-      require('karma-webpack'),
-      require('karma-sourcemap-loader'),
-      require('karma-spec-reporter'),
-      require('karma-jasmine-html-reporter'),
-      require('karma-html2js-preprocessor'),
-      require('karma-jasmine-order-reporter'),
+      karmaJasmine,
+      karmaWebpack,
+      karmaSourcemapLoader,
+      karmaSpecReporter,
+      karmaJasmineHtmlReporter,
+      karmaHTML2JSPreprocess,
+      karmaJasmineOrderReporter,
       ...browserLauncherPlugins
     ],
     files,
@@ -142,7 +156,7 @@ export function generateKarmaConfig(config: IConfig, browsers: string | string[]
     });
 
     // Add the coverage plugin for karma
-    options.plugins?.push(require('karma-coverage-istanbul-reporter'));
+    options.plugins?.push(karmaCoverageIstanbulReporter);
 
     // Add the coverage reporter
     options.reporters?.push('coverage-istanbul');
@@ -188,7 +202,7 @@ export function generateKarmaConfig(config: IConfig, browsers: string | string[]
     // Check if any global stylesheets need to be included
     if (Array.isArray(config.context.karma.stylesheets) && config.context.karma.stylesheets.length) {
       // We need to include the karma scss processor for compiling any stylesheets
-      options.plugins?.push(require('../core/karma/plugins/sass-preprocessor'));
+      // options.plugins?.push(sassPreprocessor);
 
       // Set options for the karma sass processor plugin
       options.scssPreprocessor = {
@@ -211,25 +225,25 @@ export function generateKarmaConfig(config: IConfig, browsers: string | string[]
     }
 
     // Check if any additional plugins need to be included
-    if (config.context.karma.plugins && config.context.karma.plugins instanceof Array && config.context.karma.plugins.length) {
-      const plugins = config.context.karma.plugins.filter(plugin => !!plugin).map(plugin => {
-        let pluginPath;
+    // if (config.context.karma.plugins && config.context.karma.plugins instanceof Array && config.context.karma.plugins.length) {
+    //   const plugins = config.context.karma.plugins.filter(plugin => !!plugin).map(plugin => {
+    //     let pluginPath;
 
-        if (typeof plugin === 'string') {
-          pluginPath = join(config.context.paths.rootDir, 'node_modules', plugin);
-        } else if (typeof plugin === 'object' && plugin.name && plugin.path) {
-          pluginPath = join(plugin.path, plugin.name);
-        }
+    //     if (typeof plugin === 'string') {
+    //       pluginPath = join(config.context.paths.rootDir, 'node_modules', plugin);
+    //     } else if (typeof plugin === 'object' && plugin.name && plugin.path) {
+    //       pluginPath = join(plugin.path, plugin.name);
+    //     }
 
-        if (!pluginPath || !existsSync(pluginPath)) {
-          throw new Error(`Unable to locate Karma plugin: ${plugin}`);
-        }
+    //     if (!pluginPath || !existsSync(pluginPath)) {
+    //       throw new Error(`Unable to locate Karma plugin: ${plugin}`);
+    //     }
 
-        return require(pluginPath);
-      });
+    //     return require(pluginPath);
+    //   });
 
-      options.plugins = options.plugins?.concat(plugins);
-    }
+    // options.plugins = options.plugins?.concat(plugins);
+    // }
 
     // Check if any files are to be excluded
     if (config.context.karma.exclude && config.context.karma.exclude instanceof Array && config.context.karma.exclude.length) {
@@ -287,7 +301,7 @@ function normalizeKarmaBrowsers(browsers: string | string[]): string[] {
 }
 
 function createKarmaWebpackConfig(cliConfig: IConfig): Configuration {
-  const cliNodeModules = findUp('node_modules', __dirname);
+  const cliNodeModules = findUp('node_modules', fileURLToPath(import.meta.url));
   const tsconfigPath = absolutify('src/tsconfig-test.json', cliConfig.context.paths.rootDir);
 
   // Generate the webpack configuration.
@@ -357,7 +371,7 @@ function createKarmaWebpackConfig(cliConfig: IConfig): Configuration {
               loader: 'sass-loader',
               options: {
                 webpackImporter: cliConfig.context.build.webpack.sassLoader.webpackImporter,
-                implementation: require('sass'),
+                implementation: sass,
                 sassOptions: {
                   includePaths: [absolutify('node_modules', cliConfig.context.paths.rootDir)]
                 }

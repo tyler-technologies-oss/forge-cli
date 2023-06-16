@@ -1,4 +1,4 @@
-## We only run this workflow on pushes to the main branch. This workflow will
+## We only run this workflow on pushes to the branch. This workflow will
 ## first determine if a release is to be published, and if so, build and publish.
 ## Otherwise, if not a release, we just perform CI build validation.
 
@@ -7,7 +7,7 @@ name: Build and Release
 on:
   push:
     branches:
-      - main
+      - next
     paths:
       - '.github/workflows/**/*'
       - '.eslintrc.json'
@@ -30,7 +30,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Prepare Repository
         # Fetch full git history and tags
@@ -38,7 +38,7 @@ jobs:
 
       - name: Cache Dependencies
         id: cache
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         env:
           cache-name: cache-node-modules
         with:
@@ -50,14 +50,13 @@ jobs:
             ${{ runner.os }}-
 
       - name: Setup Node
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
-          node-version: "14"
+          node-version: "16"
 
       - name: Install
         id: install
-        run: |
-          npm ci
+        run: npm ci
 
       ## Determine if this is a release build or not, which will affect which dependent jobs run below
       - name: Detect Release Status
@@ -68,10 +67,13 @@ jobs:
         run: |
           ## We use `auto version` to calculate whether this is a release build or not
           VERSION_RESULT=$(npx auto version)
+          echo "Version calculation result: ${VERSION_RESULT}"
           if [[ "${VERSION_RESULT}" =~ ^(major|minor|patch|release)$ ]]; then
-            echo "::set-output name=release::true"
+            echo "Release: true"
+            echo "release=true" >> $GITHUB_OUTPUT
           else
-            echo "::set-output name=release::false"
+            echo "Release: false"
+            echo "release=false" >> $GITHUB_OUTPUT
           fi
 
       ## Detect if any specific files we care about have changed to help us know if we need to execute a CI build at all or not
@@ -102,7 +104,7 @@ jobs:
   build:
     name: Build and Test
     needs: wf-config
-    uses: tyler-technologies-oss/forge-automation-shared/.github/workflows/wf-build-and-test.yml@v1.0.0
+    uses: tyler-technologies-oss/forge-automation-shared/.github/workflows/wf-build-and-test.yml@v2.8.1
     if: ${{ needs.wf-config.outputs.is-release == 'false' && (needs.wf-config.outputs.build-files-changed == 'true' || needs.wf-config.outputs.test-files-changed == 'true') }}
     with:
       BUILD_ENABLED: ${{ needs.wf-config.outputs.build-files-changed == 'true' }}
@@ -114,7 +116,7 @@ jobs:
   build-and-release:
     name: Build and Release
     needs: wf-config
-    uses: tyler-technologies-oss/forge-automation-shared/.github/workflows/wf-build-release.yml@v1.0.0
+    uses: tyler-technologies-oss/forge-automation-shared/.github/workflows/wf-build-release.yml@v2.8.1
     if: ${{ needs.wf-config.outputs.is-release == 'true' }}
     with:
       PRODUCTION_RELEASE: true

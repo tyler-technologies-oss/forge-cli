@@ -1,13 +1,14 @@
 import { absolutify, FileTemplateData, InstallFileDescriptor, installFiles, InstallType, Logger, runCommand, runTask } from '@tylertech/forge-build-tools';
-import { basename, join } from 'canonical-path';
+import cpath from 'canonical-path';
 import chalk from 'chalk';
-import { Question } from 'inquirer';
-import { DEFAULT_COMPONENT_PREFIX, DEFAULT_NPM_REGISTRY, DEFAULT_PACKAGE_ORG, TEMPLATE_INTERPOLATION_REGEX } from '../../constants';
-import { ICommand, ICommandArg, ICommandOption, ICommandParameter } from '../../core/command';
-import { IConfig } from '../../core/definitions';
-import { assertBoolean, printInstallationSummary } from '../../utils/utils';
+import inquirer, { Question } from 'inquirer';
+import { DEFAULT_COMPONENT_PREFIX, DEFAULT_NPM_REGISTRY, DEFAULT_PACKAGE_ORG, TEMPLATE_INTERPOLATION_REGEX } from '../../constants.js';
+import { ICommand, ICommandArg, ICommandOption, ICommandParameter } from '../../core/command.js';
+import { IConfig } from '../../core/definitions.js';
+import { assertBoolean, printInstallationSummary } from '../../utils/utils.js';
+import uppercamelcase from 'uppercamelcase';
 
-const uppercamelcase = require('uppercamelcase');
+const { basename, join } = cpath;
 
 export interface INewCommandOptions {
   path: string;
@@ -301,7 +302,6 @@ async function _prompt(config: IConfig, options: INewCommandOptions): Promise<vo
   }
 
   if (questions.length) {
-    const inquirer = await import('inquirer');
     const answers = await inquirer.prompt(questions);
     Object.assign(options, answers);
   }

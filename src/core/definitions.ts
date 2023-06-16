@@ -1,5 +1,5 @@
 import { IPackageJson, OS } from '@tylertech/forge-build-tools';
-import { ICommand } from './command';
+import { ICommand } from './command.js';
 
 export interface ICliConfig {
   binDir: string;

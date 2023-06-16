@@ -1,6 +1,6 @@
-import { ICommandParameter, ICommand } from '../../core/command';
-import { CustomElementsManifestCommand } from './custom-elements-manifest';
-import { GenerateComponentCommand } from './generate-component-command';
+import { ICommandParameter, ICommand } from '../../core/command.js';
+import { CustomElementsManifestCommand } from './custom-elements-manifest.js';
+import { GenerateComponentCommand } from './generate-component-command.js';
 
 /**
  * The command definition for the generate command. This command doesn't do anything interesting

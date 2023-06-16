@@ -14,7 +14,7 @@ import * as dartSass from 'sass';
 import * as path from 'path';
 import chalk from 'chalk';
 import { clone, merge } from 'lodash';
-const stripAnsi = require('strip-ansi');
+import stripAnsi from 'strip-ansi';
 
 function formattedScssMessage(error, file): string {
   const filePath = !error || !error.file || error.file === 'stdin' ? file.path : error.file;

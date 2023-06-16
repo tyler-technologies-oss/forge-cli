@@ -1,9 +1,11 @@
-import { relative } from 'canonical-path';
+import cpath from 'canonical-path';
 import { formatHrTime, Logger } from '@tylertech/forge-build-tools';
 import chalk from 'chalk';
-import { ICommand, ICommandOption, ICommandParameter } from '../../core/command';
-import { generateCustomElementsManifest } from '../../utils/manifest-utils';
-import { getTimeStamp } from '../../utils/utils';
+import { ICommand, ICommandOption, ICommandParameter } from '../../core/command.js';
+import { generateCustomElementsManifest } from '../../utils/manifest-utils.js';
+import { getTimeStamp } from '../../utils/utils.js';
+
+const { relative } = cpath;
 
 /** The command definition for generating a custom elements manifest. */
 export class CustomElementsManifestCommand implements ICommand {

@@ -1,6 +1,6 @@
-import { ICommand, ICommandParameter } from '../../core/command';
-import { ServeCoverageCommand } from './serve-coverage-command';
-import { ServeDemoCommand } from './serve-demo-command';
+import { ICommand, ICommandParameter } from '../../core/command.js';
+import { ServeCoverageCommand } from './serve-coverage-command.js';
+import { ServeDemoCommand } from './serve-demo-command.js';
 
 /**
  * The command definition for the `serve` command.

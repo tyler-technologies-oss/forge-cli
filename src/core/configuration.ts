@@ -1,11 +1,14 @@
 import { isAbsolute } from 'path';
-import { join, resolve } from 'canonical-path';
+import cpath from 'canonical-path';
 import deepMerge from 'deepmerge';
-import { OS, IPackageJson, loadPackageJson, deepCopy } from '@tylertech/forge-build-tools';
+import { OS, IPackageJson, deepCopy } from '@tylertech/forge-build-tools';
 
-import { IConfig, ICliConfig, IProjectConfig } from './definitions';
-import { DEFAULT_PROJECT_CONFIG, CURRENT_TEMPLATE_VERSION } from '../constants';
-import { ICommand } from './command';
+import { IConfig, ICliConfig, IProjectConfig } from './definitions.js';
+import { DEFAULT_PROJECT_CONFIG, CURRENT_TEMPLATE_VERSION } from '../constants.js';
+import { ICommand } from './command.js';
+import { loadPackageJson } from '../utils/utils.js';
+
+const { join, resolve } = cpath;
 
 /**
  * The CLI execution environment configuration.
@@ -85,11 +88,11 @@ export class Configuration implements IConfig {
    * Initializes the CLI environment configuration.
    * @param cliBinDir 
    */
-  private _initCliConfig(cliBinDir: string): void {
+  private async _initCliConfig(cliBinDir: string): Promise<void> {
     this.cli.binDir = resolve(cliBinDir);
-    this.cli.rootDir = join(cliBinDir, '../');
+    this.cli.rootDir = join(cliBinDir, '../../');
     this.cli.templatesDir = join(this.cli.rootDir, this.cli.templatesDirName);
-    this.cli.package = loadPackageJson(this.cli.rootDir);
+    this.cli.package = await loadPackageJson(this.cli.rootDir);
   }
 
   /**

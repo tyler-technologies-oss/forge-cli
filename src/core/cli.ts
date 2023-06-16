@@ -1,20 +1,20 @@
-import { ICommand } from './command';
-import { IConfig, IProjectConfig } from './definitions';
-import { Configuration } from './configuration';
-import { CURRENT_TEMPLATE_VERSION } from '../constants';
-import { CommandParser } from './command-parser';
-import { assertBoolean } from '../utils/utils';
+import { ICommand } from './command.js';
+import { IConfig, IProjectConfig } from './definitions.js';
+import { Configuration } from './configuration.js';
+import { CURRENT_TEMPLATE_VERSION } from '../constants.js';
+import { CommandParser } from './command-parser.js';
+import { assertBoolean } from '../utils/utils.js';
 
-import { HelpCommand } from '../commands/help/help-command';
-import { VersionCommand } from '../commands/version/version-command';
-import { LintCommand } from '../commands/lint/lint-command';
-import { GenerateCommand } from '../commands/generate/generate-command';
-import { NewCommand } from '../commands/new/new-command';
-import { BuildCommand } from '../commands/build/build-command';
-import { ServeCommand } from '../commands/serve/serve-command';
-import { TestCommand } from '../commands/test/test-command';
-import { BumpCommand } from '../commands/bump/bump-command';
-import { PublishCommand } from '../commands/publish/publish-command';
+import { HelpCommand } from '../commands/help/help-command.js';
+import { VersionCommand } from '../commands/version/version-command.js';
+import { LintCommand } from '../commands/lint/lint-command.js';
+import { GenerateCommand } from '../commands/generate/generate-command.js';
+import { NewCommand } from '../commands/new/new-command.js';
+import { BuildCommand } from '../commands/build/build-command.js';
+import { ServeCommand } from '../commands/serve/serve-command.js';
+import { TestCommand } from '../commands/test/test-command.js';
+import { BumpCommand } from '../commands/bump/bump-command.js';
+import { PublishCommand } from '../commands/publish/publish-command.js';
 
 export const AVAILABLE_COMMANDS: ICommand[] = [
   new HelpCommand(),

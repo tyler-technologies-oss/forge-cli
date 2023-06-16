@@ -1,11 +1,13 @@
-import { formatHrTime, loadPackageJson, Logger } from '@tylertech/forge-build-tools';
-import { join } from 'canonical-path';
+import { formatHrTime, Logger } from '@tylertech/forge-build-tools';
+import cpath from 'canonical-path';
 import chalk from 'chalk';
-import { FULL_BUILD_DIR_NAME, TEMP_BUILD_DIR_NAME } from '../../constants';
-import { ICommand, ICommandOption, ICommandParameter } from '../../core/command';
-import { cleanup, IBuildTaskConfiguration, lintTask } from '../../utils/build-utils';
-import { assertBoolean, getTimeStamp } from '../../utils/utils';
-import { build, copyBundledDistributionAssets, createDistributionPackage, prebuild } from './build-command-utils';
+import { FULL_BUILD_DIR_NAME, TEMP_BUILD_DIR_NAME } from '../../constants.js';
+import { ICommand, ICommandOption, ICommandParameter } from '../../core/command.js';
+import { cleanup, IBuildTaskConfiguration, lintTask } from '../../utils/build-utils.js';
+import { assertBoolean, getTimeStamp, loadPackageJson } from '../../utils/utils.js';
+import { build, copyBundledDistributionAssets, createDistributionPackage, prebuild } from './build-command-utils.js';
+
+const { join } = cpath;
 
 /** The command definition for the main library build. */
 export class BuildCommand implements ICommand {
@@ -14,12 +16,6 @@ export class BuildCommand implements ICommand {
   public description = 'Builds an npm package from the entire component project.';
   public subCommands: ICommand[] = [];
   public options: ICommandOption[] = [
-    {
-      name: 'cleancss',
-      type: Boolean,
-      description: 'Removes all unused selectors from component CSS files.',
-      defaultValue: 'false'
-    },
     {
       name: 'lint',
       type: Boolean,
@@ -57,7 +53,7 @@ export async function buildCommand(ctx: IBuildTaskConfiguration): Promise<void> 
   const buildRoot = join(ctx.context.paths.distBuildDir, FULL_BUILD_DIR_NAME);
   const buildOutputDir = join(buildRoot, TEMP_BUILD_DIR_NAME);
   const srcDir = ctx.context.paths.libDir;
-  const packageJson = loadPackageJson(ctx.paths.rootDir);
+  const packageJson = await loadPackageJson(ctx.paths.rootDir);
   const lintCode = assertBoolean(ctx.args.lint, true);
   
   if (lintCode) {

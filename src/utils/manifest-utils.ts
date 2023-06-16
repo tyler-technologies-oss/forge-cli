@@ -1,6 +1,8 @@
 import { runCommand } from '@tylertech/forge-build-tools';
-import { IProjectConfig } from '../core/definitions';
-import { relative } from 'canonical-path';
+import { IProjectConfig } from '../core/definitions.js';
+import cpath from 'canonical-path';
+
+const { relative } = cpath;
 
 export async function generateCustomElementsManifest(projectConfig: IProjectConfig, srcDir: string, config?: { configFileName?: string; outDir?: string }): Promise<string> {
   let cmd = 'npx custom-elements-manifest analyze';

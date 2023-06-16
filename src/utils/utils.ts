@@ -1,7 +1,7 @@
 import { parse, join, dirname } from 'path';
 import moment from 'moment';
 import chalk from 'chalk';
-import { InstallFileDescriptor, existsAsync, existsSync, Logger, statAsync } from '@tylertech/forge-build-tools';
+import { InstallFileDescriptor, existsAsync, existsSync, Logger, statAsync, IPackageJson, readFileAsync } from '@tylertech/forge-build-tools';
 import getPackageJson, { AbbreviatedMetadata } from 'package-json';
 import * as semver from 'semver';
 import os from 'os';
@@ -148,4 +148,13 @@ export function getPhysicalCoreCount(): number {
     amount = cores.length;
   }
   return amount;
+}
+
+export async function loadPackageJson(filePath: string): Promise<IPackageJson> {
+  const file = await readFileAsync(new URL(`${filePath}/package.json`, import.meta.url), 'utf-8');
+  try {
+    return JSON.parse(file);
+  } catch {
+    throw new Error(`Unable to locate package.json file at ${filePath}`);
+  }
 }

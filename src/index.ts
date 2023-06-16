@@ -1,11 +1,13 @@
-import { join } from 'canonical-path';
+import cpath from 'canonical-path';
 import { readJsonFile, Logger } from '@tylertech/forge-build-tools';
 import minimist from 'minimist';
 import chalk from 'chalk';
 
-import { CONFIG_FILENAME } from './constants';
-import { IProjectConfig } from './core/definitions';
-import { ForgeCLI } from './core/cli';
+import { CONFIG_FILENAME } from './constants.js';
+import { IProjectConfig } from './core/definitions.js';
+import { ForgeCLI } from './core/cli.js';
+
+const { join } = cpath;
 
 /**
  * The is the run method that is executed when the CLI is invoked. It sets up the  

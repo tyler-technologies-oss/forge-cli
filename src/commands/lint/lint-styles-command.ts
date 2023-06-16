@@ -1,5 +1,5 @@
-import { ICommand, ICommandParameter } from '../../core/command';
-import { lintStyleSheetsTask } from '../../utils/lint-utils';
+import { ICommand, ICommandParameter } from '../../core/command.js';
+import { lintStyleSheetsTask } from '../../utils/lint-utils.js';
 
 export class LintStylesCommand implements ICommand {
   public name = 'styles';

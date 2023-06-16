@@ -1,8 +1,11 @@
-import { existsAsync, IPackageJson, loadPackageJson, Logger, runCommand, runTask } from '@tylertech/forge-build-tools';
-import { join } from 'canonical-path';
+import { existsAsync, IPackageJson, Logger, runCommand, runTask } from '@tylertech/forge-build-tools';
+import cpath from 'canonical-path';
 import getPackageJson, { AbbreviatedMetadata } from 'package-json';
 import * as semver from 'semver';
-import { ICommand, ICommandOption, ICommandParameter } from '../../core/command';
+import { ICommand, ICommandOption, ICommandParameter } from '../../core/command.js';
+import { loadPackageJson } from '../../utils/utils.js';
+
+const { join } = cpath;
 
 /** The command definition for the publish package command. */
 export class PublishCommand implements ICommand {
@@ -31,7 +34,7 @@ export class PublishCommand implements ICommand {
       throw new Error(`Package "${packageName}" does not exist at: ${packagePath}. Did you build the package first?`);
     }
 
-    const packageJson = loadPackageJson(packagePath);
+    const packageJson = await loadPackageJson(packagePath);
     const packageRegistryUrl = packageJson.publishConfig?.registry ?? param.config.getPackageRegistry();
     const registryPackageJson = await getRegistryPackageJson(packageJson.name, packageRegistryUrl);
 

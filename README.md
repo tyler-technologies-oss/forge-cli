@@ -24,13 +24,6 @@ $ forge help
 $ forge new
 ```
 
-## Serving the static demo application
-
-```shell
-$ forge serve
-```
-Run `$ forge help serve demo` for information on options that can be passed to the serve command.
-
 ## Development
 
 Install dependencies:
@@ -54,7 +47,7 @@ $ npm run watch
 Testing the CLI locally can be done by using `npm link`, or by just using a path to the `dist` directory after a successful build:
 
 ```shell
-$ node ../forge-cli/dist/bin/forge help
+$ node ../forge-cli/bin/forge help
 ```
 
 ## License

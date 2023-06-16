@@ -4,8 +4,8 @@
 process.title = 'forge';
 
 // Ensure node version
-var semver = require('semver');
-var packageJson = require('../package.json');
+import semver from 'semver';
+import packageJson from '../package.json' assert { type: 'json' };
 var currentNodeVersion = process.version.replace('v', '');
 var requiresNodeVersion = packageJson.engines.node;
 
@@ -16,5 +16,6 @@ if (!semver.satisfies(currentNodeVersion, requiresNodeVersion)) {
 }
 
 // Initialize the cli
-var cli = require('../src/index');
-cli.run(process, __dirname);
+import { run } from '../dist/esm/index.js';
+import { fileURLToPath } from 'url';
+run(process, fileURLToPath(import.meta.url));

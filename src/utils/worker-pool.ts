@@ -3,7 +3,7 @@ import { EventEmitter } from 'events';
 import { AsyncResource } from 'async_hooks';
 import { Worker } from 'worker_threads';
 import { Logger } from '@tylertech/forge-build-tools';
-import { getPhysicalCoreCount } from './utils';
+import { getPhysicalCoreCount } from './utils.js';
 
 const TASK_INFO = Symbol('TaskInfo');
 const WORKER_AVAILABLE_EVENT = Symbol('WorkerFreedEvent');

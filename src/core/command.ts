@@ -1,4 +1,4 @@
-import { IConfig } from './definitions';
+import { IConfig } from './definitions.js';
 import { ParsedArgs } from 'minimist';
 
 /**

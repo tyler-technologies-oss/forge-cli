@@ -1,14 +1,15 @@
 import { absolutify, compileSass, existsAsync, logError, Logger, OS, runTask } from '@tylertech/forge-build-tools';
 import * as bs from 'browser-sync';
-import { join } from 'canonical-path';
+import cpath from 'canonical-path';
 import chalk from 'chalk';
 import webpack from 'webpack';
-import { ICommand, ICommandOption, ICommandParameter } from '../../core/command';
-import { IConfig, IGlobalOptions } from '../../core/definitions';
-import { assertBoolean, getTimeStamp } from '../../utils/utils';
-import { getWebpackConfigurationFactory, IWebpackEnv } from '../../utils/webpack';
+import { ICommand, ICommandOption, ICommandParameter } from '../../core/command.js';
+import { IConfig, IGlobalOptions } from '../../core/definitions.js';
+import { assertBoolean, getTimeStamp } from '../../utils/utils.js';
+import { getWebpackConfigurationFactory, IWebpackEnv } from '../../utils/webpack.js';
+import uppercamelcase from 'uppercamelcase';
 
-const uppercamelcase = require('uppercamelcase');
+const { join } = cpath;
 
 export const DEFAULT_DEV_SERVER_HOST = 'localhost';
 export const DEFAULT_DEV_SERVER_PORT = 9000;

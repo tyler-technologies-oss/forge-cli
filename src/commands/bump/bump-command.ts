@@ -1,8 +1,10 @@
-import { join } from 'canonical-path';
+import cpath from 'canonical-path';
 import * as semver from 'semver';
 import chalk from 'chalk';
 import { getDirectoriesContainingFiles, existsAsync, readJsonFile, IPackageJson, writeJsonFile, Logger } from '@tylertech/forge-build-tools';
-import { ICommand, ICommandParameter, ICommandArg, ICommandOption } from '../../core/command';
+import { ICommand, ICommandParameter, ICommandArg, ICommandOption } from '../../core/command.js';
+
+const { join } = cpath;
 
 export const RELEASE_TYPES = ['major', 'premajor', 'minor', 'preminor', 'patch', 'prepatch', 'prerelease'];
 

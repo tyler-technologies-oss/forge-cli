@@ -1,4 +1,4 @@
-import { join, parse, resolve } from 'canonical-path';
+import cpath from 'canonical-path';
 import ts from 'typescript';
 import {
   copyFilesAsync,
@@ -8,7 +8,6 @@ import {
   IFileCopyConfig,
   IPackageJson,
   mkdirp,
-  runCommand,
   runTask,
   writeFileAsync
 } from '@tylertech/forge-build-tools';
@@ -22,8 +21,10 @@ import {
   IBuildTaskConfiguration,
   inlineContentTask,
   resolveBuildJson
-} from '../../utils/build-utils';
-import { generateCustomElementsManifest } from '../../utils/manifest-utils';
+} from '../../utils/build-utils.js';
+import { generateCustomElementsManifest } from '../../utils/manifest-utils.js';
+
+const { join, parse, resolve } = cpath;
 
 /**
  * Prepares the staging directory for a new build of the library.
@@ -52,7 +53,7 @@ export async function prebuild({
 
     // Mirror the source files to the staging directory
     const stagingSrcDir = join(buildOutputDir, 'src');
-    await copyFilesAsync(join(srcDir, '**/*'), srcDir, stagingSrcDir);
+    await copyFilesAsync(join(srcDir, '**/*.*'), srcDir, stagingSrcDir, ['**/*.test.ts']);
   }, quiet);
 }
 

@@ -1,8 +1,8 @@
 import { join } from 'path';
 import * as bs from 'browser-sync';
 
-import { ICommand, ICommandParameter, ICommandOption } from '../../core/command';
-import { findClosestOpenPort } from '../../utils/network';
+import { ICommand, ICommandParameter, ICommandOption } from '../../core/command.js';
+import { findClosestOpenPort } from '../../utils/network.js';
 import { existsAsync } from '@tylertech/forge-build-tools';
 
 const DEFAULT_BROWSER_PORT = 9040;
