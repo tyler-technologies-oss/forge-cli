@@ -33,8 +33,7 @@
     "test:watch": "npm run test -- --watch",
     "serve:coverage": "browser-sync start --server --files 'test/coverage' --port 9050 --watch --no-notify --no-ghost-mode",
     "changelog": "auto changelog",
-    "release": "auto shipit",
-    "postversion": "cd dist && npm version $npm_package_version --no-git-tag-version --no-commit-hooks --ignore-scripts"
+    "release": "auto shipit"
   },
   "dependencies": {
     "@custom-elements-manifest/analyzer": "^0.8.3",
