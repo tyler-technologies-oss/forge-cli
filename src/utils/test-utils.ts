@@ -1,12 +1,12 @@
-import { absolutify, Logger } from '@tylertech/forge-build-tools';
+import { absolutify, existsSync, Logger } from '@tylertech/forge-build-tools';
 import karma, { ConfigOptions, constants, FilePattern } from 'karma';
-import { sep, resolve as pathResolve } from 'path';
+import { sep, resolve as pathResolve, join } from 'path';
 import wepback, { Configuration } from 'webpack';
 import { IConfig } from '../core/definitions.js';
 import { findUp } from './utils.js';
 import { TsconfigPathsPlugin } from 'tsconfig-paths-webpack-plugin';
 
-import sass from 'sass';
+import * as sass from 'sass';
 import karmaJasmine from 'karma-jasmine';
 import karmaWebpack from 'karma-webpack';
 import karmaSourcemapLoader from 'karma-sourcemap-loader';
@@ -202,7 +202,7 @@ export function generateKarmaConfig(config: IConfig, browsers: string | string[]
     // Check if any global stylesheets need to be included
     if (Array.isArray(config.context.karma.stylesheets) && config.context.karma.stylesheets.length) {
       // We need to include the karma scss processor for compiling any stylesheets
-      // options.plugins?.push(sassPreprocessor);
+      options.plugins?.push(sassPreprocessor as any);
 
       // Set options for the karma sass processor plugin
       options.scssPreprocessor = {
@@ -218,32 +218,6 @@ export function generateKarmaConfig(config: IConfig, browsers: string | string[]
         preprocessors[stylesheet] = ['scss'];
       }
     }
-
-    // Check if any additional frameworks need to be specified
-    if (config.context.karma.frameworks && config.context.karma.frameworks instanceof Array && config.context.karma.frameworks.length) {
-      options.frameworks = options.frameworks?.concat(config.context.karma.frameworks);
-    }
-
-    // Check if any additional plugins need to be included
-    // if (config.context.karma.plugins && config.context.karma.plugins instanceof Array && config.context.karma.plugins.length) {
-    //   const plugins = config.context.karma.plugins.filter(plugin => !!plugin).map(plugin => {
-    //     let pluginPath;
-
-    //     if (typeof plugin === 'string') {
-    //       pluginPath = join(config.context.paths.rootDir, 'node_modules', plugin);
-    //     } else if (typeof plugin === 'object' && plugin.name && plugin.path) {
-    //       pluginPath = join(plugin.path, plugin.name);
-    //     }
-
-    //     if (!pluginPath || !existsSync(pluginPath)) {
-    //       throw new Error(`Unable to locate Karma plugin: ${plugin}`);
-    //     }
-
-    //     return require(pluginPath);
-    //   });
-
-    // options.plugins = options.plugins?.concat(plugins);
-    // }
 
     // Check if any files are to be excluded
     if (config.context.karma.exclude && config.context.karma.exclude instanceof Array && config.context.karma.exclude.length) {

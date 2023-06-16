@@ -297,45 +297,6 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "frameworks": {
-          "type": "array",
-          "description": "List of additional Karma frameworks.",
-          "default": [],
-          "items": {
-            "type": "string"
-          }
-        },
-        "plugins": {
-          "type": "array",
-          "description": "List of additional Karma plugins.",
-          "default": [],
-          "items": {
-            "oneOf": [
-              {
-                "type": "string",
-                "description": "The name of the plugin package to reference from the node_modules folder."
-              },
-              {
-                "type": "object",
-                "additionalProperties": false,
-                "required": [
-                  "path",
-                  "name"
-                ],
-                "properties": {
-                  "path": {
-                    "type": "string",
-                    "description": "The path to the plugin (exclude the name of the plugin)."
-                  },
-                  "name": {
-                    "type": "string",
-                    "description": "The name of the plugin."
-                  }
-                }
-              }
-            ]
-          }
-        },
         "files": {
           "type": "array",
           "description": "Additional files to pass to Karma",
