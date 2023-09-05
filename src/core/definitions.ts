@@ -64,6 +64,7 @@ export interface ICopyFileDescriptor {
 export interface IBuildProjectConfig {
   webpack: IWebpackProjectConfig;
   rollup: IRollupProjectConfig;
+  esbuild: IEsbuildProjectConfig;
   tsconfigPath: string;
   demo: IProjectDemoConfig;
   static: IBuildStaticConfig;
@@ -88,6 +89,13 @@ export interface IWebpackSassLoaderConfig {
 }
 
 export interface IRollupProjectConfig {
+  bundle?: boolean;
+}
+
+export interface IEsbuildProjectConfig {
+  target?: string | string[];
+  supported?: Record<string, boolean>;
+  minify?: boolean;
   bundle?: boolean;
 }
 

@@ -63,12 +63,21 @@ export async function lintTask(dir: string, stylelintConfigPath: string, eslint:
 /** Generates a bundled ES module build of the library. */
 export async function generateStaticESModuleSources({
   outdir,
+  target,
+  supported,
+  bundle = true,
+  minify = true,
   entryPoints,
   external,
   metafile,
   metafileOutDir
 }: {
   outdir: string;
+  target?: string | string[];
+  supported?: Record<string, boolean>;
+  bundle?: boolean;
+  minify?: boolean;
+  format?: string;
   metafile?: boolean;
   metafileOutDir?: string;
   entryPoints: string[] | Record<string, string>;
@@ -76,13 +85,14 @@ export async function generateStaticESModuleSources({
 }): Promise<void> {
   const result = await esbuild.build({
     format: 'esm',
-    target: 'es2017',
+    target,
+    supported,
     entryPoints,
     splitting: true,
     chunkNames: 'chunks/[name].[hash]',
     sourcemap: true,
-    bundle: true,
-    minify: true,
+    bundle,
+    minify,
     metafile,
     outdir,
     external
