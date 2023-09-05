@@ -1,14 +1,16 @@
 import { join, parse, resolve } from 'canonical-path';
 import ts from 'typescript';
 import {
+  absolutify,
   copyFilesAsync,
   copyFilesMultiple,
   deleteDir,
+  existsAsync,
   globFilesAsync,
   IFileCopyConfig,
   IPackageJson,
   mkdirp,
-  runCommand,
+  readJsonFile,
   runTask,
   writeFileAsync
 } from '@tylertech/forge-build-tools';
@@ -105,10 +107,22 @@ export async function build({
     const libEntry = join(stagingSrcDir, `${entryName}.ts`);
     const componentEntries = await globFilesAsync(join(stagingSrcDir, '**/index.ts')) as string[];
 
+    // Attempt to inherit the ES build target from the build tsconfig if we don't have one set in the project configuration
+    let buildTarget = config.context.build.esbuild.target;
+    const tsconfigPath = absolutify(config.context.build.tsconfigPath, config.context.paths.rootDir);
+    if (!buildTarget && await existsAsync(tsconfigPath)) {
+      const buildTsconfig = await readJsonFile<any>(tsconfigPath);
+      buildTarget = buildTsconfig.compilerOptions?.target;
+    }
+
     // Generate the static ES module distribution sources
     // Note: this will bundle dependencies with code splitting, and **without** bare module specifiers
     await generateStaticESModuleSources({
       outdir: esbuildBuildDir,
+      target: buildTarget,
+      supported: config.context.build.esbuild.supported,
+      minify: config.context.build.esbuild.minify,
+      bundle: config.context.build.esbuild.bundle,
       entryPoints: [libEntry, ...componentEntries]
     });
   });
