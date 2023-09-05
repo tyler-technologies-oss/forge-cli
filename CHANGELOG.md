@@ -1,3 +1,15 @@
+# v2.5.0 (Tue Sep 05 2023)
+
+#### 🚀 Enhancement
+
+- feat(build): allow for configurable esbuild target and other build options [#15](https://github.com/tyler-technologies-oss/forge-cli/pull/15) ([@DRiFTy17](https://github.com/DRiFTy17))
+
+#### Authors: 1
+
+- Kieran Nichols ([@DRiFTy17](https://github.com/DRiFTy17))
+
+---
+
 # v2.4.0 (Tue Sep 05 2023)
 
 #### 🚀 Enhancement
