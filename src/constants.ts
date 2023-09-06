@@ -39,6 +39,7 @@ export const DEFAULT_PROJECT_CONFIG: IProjectConfig = {
     },
     demo: { componentBundles: [] },
     rollup: {},
+    esbuild: {},
     tsconfigPath: `${DEFAULT_SRC_DIR_NAME}/${DEFAULT_LIB_DIR_NAME}/${DEFAULT_BUILD_TSCONFIG_NAME}`,
     static: {
       distPath: 'static'

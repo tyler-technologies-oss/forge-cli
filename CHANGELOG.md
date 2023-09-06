@@ -1,3 +1,32 @@
+# v2.5.0 (Tue Sep 05 2023)
+
+#### 🚀 Enhancement
+
+- feat(build): allow for configurable esbuild target and other build options [#15](https://github.com/tyler-technologies-oss/forge-cli/pull/15) ([@DRiFTy17](https://github.com/DRiFTy17))
+
+#### Authors: 1
+
+- Kieran Nichols ([@DRiFTy17](https://github.com/DRiFTy17))
+
+---
+
+# v2.4.0 (Tue Sep 05 2023)
+
+#### 🚀 Enhancement
+
+- feat: update build workflow ([@DRiFTy17](https://github.com/DRiFTy17))
+- feat: updated `@tylertech/forge-build-tools` to latest for TS build update to support ES2020+ [#14](https://github.com/tyler-technologies-oss/forge-cli/pull/14) ([@DRiFTy17](https://github.com/DRiFTy17))
+
+#### 🐛 Bug Fix
+
+- chore: update workflows [#11](https://github.com/tyler-technologies-oss/forge-cli/pull/11) ([@DRiFTy17](https://github.com/DRiFTy17))
+
+#### Authors: 1
+
+- Kieran Nichols ([@DRiFTy17](https://github.com/DRiFTy17))
+
+---
+
 # v2.3.1 (Thu Oct 20 2022)
 
 #### 🐛 Bug Fix
