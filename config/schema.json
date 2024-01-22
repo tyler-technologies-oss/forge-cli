@@ -186,6 +186,11 @@
           "type": "object",
           "additionalProperties": false,
           "properties": {
+            "enabled": {
+              "type": "boolean",
+              "description": "Whether to enable static build or not.",
+              "default": false
+            },
             "distPath": {
               "type": "string",
               "description": "The path within the `distDir` to generate static build assets to."
