@@ -81,6 +81,7 @@ export interface IWebpackProjectConfig {
 }
 
 export interface IBuildStaticConfig {
+  enabled: boolean;
   distPath: string;
 }
 
