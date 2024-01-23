@@ -1,3 +1,15 @@
+# v2.6.0 (Tue Jan 23 2024)
+
+#### 🚀 Enhancement
+
+- feat(build): add configuration to allow for controlling if static build artifacts are generated [#16](https://github.com/tyler-technologies-oss/forge-cli/pull/16) ([@DRiFTy17](https://github.com/DRiFTy17))
+
+#### Authors: 1
+
+- Kieran Nichols ([@DRiFTy17](https://github.com/DRiFTy17))
+
+---
+
 # v2.5.0 (Tue Sep 05 2023)
 
 #### 🚀 Enhancement
