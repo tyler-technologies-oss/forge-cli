@@ -1,3 +1,16 @@
+# v2.6.1 (Tue Feb 06 2024)
+
+#### 🐛 Bug Fix
+
+- fix: revert npm audit fix that broke build (Merge pull request #18) [#18](https://github.com/tyler-technologies-oss/forge-cli/pull/18) ([@MikeMatusz](https://github.com/MikeMatusz))
+- chore: update @custom-elements-manifest/analyzer for readonly support [#17](https://github.com/tyler-technologies-oss/forge-cli/pull/17) ([@MikeMatusz](https://github.com/MikeMatusz))
+
+#### Authors: 1
+
+- Mike Matuszak ([@MikeMatusz](https://github.com/MikeMatusz))
+
+---
+
 # v2.6.0 (Tue Jan 23 2024)
 
 #### 🚀 Enhancement
