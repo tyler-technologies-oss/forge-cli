@@ -27,7 +27,7 @@
     "postversion": "cd dist && npm version $npm_package_version --no-git-tag-version --no-commit-hooks --ignore-scripts"
   },
   "dependencies": {
-    "@custom-elements-manifest/analyzer": "^0.6.4",
+    "@custom-elements-manifest/analyzer": "^0.9.0",
     "@tylertech/forge-build-tools": "^2.1.0",
     "autoprefixer": "^10.4.4",
     "browser-sync": "^2.27.9",
