@@ -12,6 +12,8 @@ on:
       - 'src/**/*'
       - 'templates/**/*'
       - 'test/**/*'
+      - 'package.json'
+      - 'package-lock.json'
 
 jobs:
   build:

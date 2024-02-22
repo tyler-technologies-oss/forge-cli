@@ -49,20 +49,24 @@ export class BuildCommand implements ICommand {
  * Builds the full library of components by bundling and creating an npm package.
  * @param {IConfig} config The environment configuration.
  */
-export async function buildCommand(ctx: IBuildTaskConfiguration): Promise<void> {
-  const buildRoot = join(ctx.context.paths.distBuildDir, FULL_BUILD_DIR_NAME);
+export async function buildCommand(config: IBuildTaskConfiguration): Promise<void> {
+  const buildRoot = join(config.context.paths.distBuildDir, FULL_BUILD_DIR_NAME);
   const buildOutputDir = join(buildRoot, TEMP_BUILD_DIR_NAME);
-  const srcDir = ctx.context.paths.libDir;
-  const packageJson = await loadPackageJson(ctx.paths.rootDir);
-  const lintCode = assertBoolean(ctx.args.lint, true);
+  const srcDir = config.context.paths.libDir;
+  const packageJson = await loadPackageJson(config.paths.rootDir);
+  const lintCode = assertBoolean(config.args.lint, true);
   
   if (lintCode) {
-    await lintTask(ctx.context.paths.libDir, ctx.context.paths.stylelintConfigPath, true, ctx.quiet);
+    await lintTask(config.context.paths.libDir, config.context.paths.stylelintConfigPath, true, config.quiet);
   }
 
-  await prebuild({ buildRoot, buildDir: buildRoot, buildOutputDir, srcDir, quiet: ctx.quiet });
-  await build({ config: ctx, buildOutputDir, quiet: ctx.quiet });
-  await createDistributionPackage({ config: ctx, packageJson, buildOutputDir });
-  await copyBundledDistributionAssets({ config: ctx, packageJson, buildOutputDir });
-  await cleanup(buildOutputDir, ctx.quiet);
+  await prebuild({ buildRoot, buildDir: buildRoot, buildOutputDir, srcDir, quiet: config.quiet });
+  await build({ config, buildOutputDir, quiet: config.quiet });
+  await createDistributionPackage({ config, packageJson, buildOutputDir });
+
+  if (config.context.build.static.enabled) {
+    await copyBundledDistributionAssets({ config, packageJson, buildOutputDir });
+  }
+  
+  await cleanup(buildOutputDir, config.quiet);
 }

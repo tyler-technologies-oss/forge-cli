@@ -1,3 +1,28 @@
+# v2.6.1 (Tue Feb 06 2024)
+
+#### 🐛 Bug Fix
+
+- fix: revert npm audit fix that broke build (Merge pull request #18) [#18](https://github.com/tyler-technologies-oss/forge-cli/pull/18) ([@MikeMatusz](https://github.com/MikeMatusz))
+- chore: update @custom-elements-manifest/analyzer for readonly support [#17](https://github.com/tyler-technologies-oss/forge-cli/pull/17) ([@MikeMatusz](https://github.com/MikeMatusz))
+
+#### Authors: 1
+
+- Mike Matuszak ([@MikeMatusz](https://github.com/MikeMatusz))
+
+---
+
+# v2.6.0 (Tue Jan 23 2024)
+
+#### 🚀 Enhancement
+
+- feat(build): add configuration to allow for controlling if static build artifacts are generated [#16](https://github.com/tyler-technologies-oss/forge-cli/pull/16) ([@DRiFTy17](https://github.com/DRiFTy17))
+
+#### Authors: 1
+
+- Kieran Nichols ([@DRiFTy17](https://github.com/DRiFTy17))
+
+---
+
 # v2.5.0 (Tue Sep 05 2023)
 
 #### 🚀 Enhancement

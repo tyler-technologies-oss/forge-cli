@@ -103,31 +103,33 @@ export async function build({
     await compileTypeScriptTask(config, stagingSrcDir, stagingSrcDir, esmBuildDir, ts.ScriptTarget.ES2017, ts.ModuleKind.ES2015, true, typingsDir);
   }, quiet);
 
-  // Bundles the library with code-splitting to generate a self-contained ESM distribution
-  await runTask('Bundling ESM distribution sources...', async () => {
-    // Build the library entry points
-    const libEntry = join(stagingSrcDir, `${entryName}.ts`);
-    const componentEntries = await globFilesAsync(join(stagingSrcDir, '**/index.ts')) as string[];
+  if (config.context.build.static.enabled) {
+    // Bundles the library with code-splitting to generate a self-contained ESM distribution
+    await runTask('Bundling ESM distribution sources...', async () => {
+      // Build the library entry points
+      const libEntry = join(stagingSrcDir, `${entryName}.ts`);
+      const componentEntries = await globFilesAsync(join(stagingSrcDir, '**/index.ts')) as string[];
 
-    // Attempt to inherit the ES build target from the build tsconfig if we don't have one set in the project configuration
-    let buildTarget = config.context.build.esbuild.target;
-    const tsconfigPath = absolutify(config.context.build.tsconfigPath, config.context.paths.rootDir);
-    if (!buildTarget && await existsAsync(tsconfigPath)) {
-      const buildTsconfig = await readJsonFile<any>(tsconfigPath);
-      buildTarget = buildTsconfig.compilerOptions?.target;
-    }
+      // Attempt to inherit the ES build target from the build tsconfig if we don't have one set in the project configuration
+      let buildTarget = config.context.build.esbuild.target;
+      const tsconfigPath = absolutify(config.context.build.tsconfigPath, config.context.paths.rootDir);
+      if (!buildTarget && await existsAsync(tsconfigPath)) {
+        const buildTsconfig = await readJsonFile<any>(tsconfigPath);
+        buildTarget = buildTsconfig.compilerOptions?.target;
+      }
 
-    // Generate the static ES module distribution sources
-    // Note: this will bundle dependencies with code splitting, and **without** bare module specifiers
-    await generateStaticESModuleSources({
-      outdir: esbuildBuildDir,
-      target: buildTarget,
-      supported: config.context.build.esbuild.supported,
-      minify: config.context.build.esbuild.minify,
-      bundle: config.context.build.esbuild.bundle,
-      entryPoints: [libEntry, ...componentEntries]
+      // Generate the static ES module distribution sources
+      // Note: this will bundle dependencies with code splitting, and **without** bare module specifiers
+      await generateStaticESModuleSources({
+        outdir: esbuildBuildDir,
+        target: buildTarget,
+        supported: config.context.build.esbuild.supported,
+        minify: config.context.build.esbuild.minify,
+        bundle: config.context.build.esbuild.bundle,
+        entryPoints: [libEntry, ...componentEntries]
+      });
     });
-  });
+  }
 
   // Generates Custom Elements Manifest file.
   if (!config.context.customElementsManifestConfig?.disableAutoGeneration) {
