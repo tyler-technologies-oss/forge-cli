@@ -77,9 +77,9 @@
     "typescript": "~4.6.3"
   },
   "devDependencies": {
-    "@auto-it/conventional-commits": "^10.46.0",
-    "@auto-it/first-time-contributor": "^10.46.0",
-    "@auto-it/npm": "^10.46.0",
+    "@auto-it/conventional-commits": "^11.0.5",
+    "@auto-it/first-time-contributor": "^11.0.5",
+    "@auto-it/npm": "^11.0.5",
     "@commitlint/cli": "^17.6.5",
     "@commitlint/config-conventional": "^17.6.5",
     "@tylertech-eslint/eslint-plugin": "^1.0.9",
@@ -94,7 +94,7 @@
     "@types/node": "^14.14.41",
     "@types/semver": "^7.3.9",
     "@types/webpack": "^5.28.0",
-    "auto": "^10.46.0",
+    "auto": "^11.0.5",
     "commitlint": "^17.6.5",
     "gulp": "^4.0.2",
     "husky": "^7.0.4",
