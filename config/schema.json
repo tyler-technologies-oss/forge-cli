@@ -1,12 +1,9 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://forge.tylertech.com/schema.json",
-  "title": "Forge CLI Configuration",
+  "$id": "tyler-forge-schema",
+  "title": "Tyler Forge™ CLI Configuration",
   "type": "object",
   "additionalProperties": false,
-  "required": [
-    "packageName"
-  ],
   "properties": {
     "$schema": {
       "type": "string"
@@ -17,9 +14,6 @@
     "libDirName":  {
       "$ref": "#/definitions/libDirName"
     },
-    "demoDirName":  {
-      "$ref": "#/definitions/demoDirName"
-    },
     "testDirName":  {
       "$ref": "#/definitions/testDirName"
     },
@@ -28,15 +22,6 @@
     },
     "buildConfigFileName":  {
       "$ref": "#/definitions/buildConfigFileName"
-    },
-    "templateVersion": {
-      "$ref": "#/definitions/templateVersion"
-    },
-    "packageOrg": {
-      "$ref": "#/definitions/packageOrg"
-    },
-    "packageName": {
-      "$ref": "#/definitions/packageName"
     },
     "packageConfig": {
       "$ref": "#/definitions/packageConfig"
@@ -61,29 +46,12 @@
     }
   },
   "definitions": {
-    "forge": {
-      "type": "boolean",
-      "description": "Used to specify that this package is the core Foerge package for resolving core dependencies. Don't use unless you know what you are doing.",
-      "default": false
-    },
-    "templateVersion": {
-      "type": "string",
-      "description": "The version of the CLI scaffolding templates to use.",
-      "enum": [
-        "v1"
-      ]
-    },
     "srcDirName": {
       "type": "string",
       "description": "The name of the source directory.",
       "default": "src"
     },
     "libDirName": {
-      "type": "string",
-      "description": "The name of the library directory under [srcDirName].",
-      "default": "lib"
-    },
-    "demoDirName": {
       "type": "string",
       "description": "The name of the library directory under [srcDirName].",
       "default": "lib"
@@ -102,10 +70,6 @@
       "type": "string",
       "description": "The name of the build configuration file optionally located in each component directory that is used for specifying build options.",
       "default": "build.json"
-    },
-    "packageName": {
-      "type": "string",
-      "description": "The base npm package name."
     },
     "customElementsManifestConfig": {
       "type": "object",
@@ -158,10 +122,6 @@
         }
       }
     },
-    "registry": {
-      "type": "string",
-      "description": "The npm registry."
-    },
     "license": {
       "type": "object",
       "description": "Information about the license that this project uses for distribution.",
@@ -171,10 +131,6 @@
           "description": "The license header to prepend to built distribution files."
         }
       }
-    },
-    "packageOrg": {
-      "type": "string",
-      "description": "The npm org to place each package generated from this library under."
     },
     "build": {
       "type": "object",
@@ -197,21 +153,10 @@
             }
           }
         },
-        "demo": {
-          "description": "Additional options to add to the demo application's build",
-          "type": "object",
-          "additionalProperties": false,
-          "properties": {
-            "componentBundles": {
-              "description": "Additional components to create separate bundles",
-              "type": "array",
-              "additionalProperties": false,
-              "default": [],
-              "items": {
-                "type": "string"
-              }
-            }
-          }
+        "distributionBundleName": {
+          "type": "string",
+          "description": "The name of the distribution bundle to generate.",
+          "default": "lib.js"
         },
         "tsconfigPath": {
           "description": "Sets the path to the tsconfig file to use.",
@@ -451,11 +396,6 @@
           "type": "string",
           "description": "The path to the unit testing spec directory.",
           "default": "src/test/spec"
-        },
-        "demoDir": {
-          "type": "string",
-          "description": "The path to the demo app website.",
-          "default": "src/demo"
         },
         "stylelintConfigPath": {
           "type": "string",

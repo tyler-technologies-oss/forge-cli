@@ -4,20 +4,6 @@ on:
   push:
     branches:
       - next
-    paths:
-      - '.github/workflows/**/*'
-      - '.eslintrc.json'
-      - '.autorc'
-      - 'gulpfile.ts'
-      - 'tsconfig.json'
-      - 'auto.config.ts'
-      - 'bin/**/*'
-      - 'config/**/*'
-      - 'src/**/*'
-      - 'templates/**/*'
-      - 'test/**/*'
-      - 'package.json'
-      - 'package-lock.json'
   workflow_dispatch:
 
 concurrency: build-release-${{ github.ref }}
@@ -91,13 +77,9 @@ jobs:
               - 'config/**'
               - 'src/**'
               - 'templates/**'
-            test:
-              - 'src/**'
-              - 'test/**'
     outputs:
       is-release: ${{ steps.detect-release.outputs.release }}
       build-files-changed: ${{ steps.file-filter.outputs.build == 'true' }}
-      test-files-changed: ${{ steps.file-filter.outputs.test == 'true' }}
 
   # This job will run on non-release builds for general CI validation only if files are changed that need to be built
   build:
@@ -107,7 +89,6 @@ jobs:
     if: ${{ needs.wf-config.outputs.is-release == 'false' && (needs.wf-config.outputs.build-files-changed == 'true' || needs.wf-config.outputs.test-files-changed == 'true') }}
     with:
       BUILD_ENABLED: ${{ needs.wf-config.outputs.build-files-changed == 'true' }}
-      TESTS_ENABLED: ${{ needs.wf-config.outputs.test-files-changed == 'true' }}
     secrets:
       NPM_TOKEN: ${{ secrets.FORGE_NPM_TOKEN }}
 

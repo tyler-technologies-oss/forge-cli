@@ -28,7 +28,6 @@ export class BuildCommand implements ICommand {
     const ctx: IBuildTaskConfiguration = {
       context: param.config.context,
       paths: param.config.context.paths,
-      packageName: param.config.context.packageName,
       cwd: param.config.cwd,
       args: param.args
     };

@@ -1,28 +1,28 @@
-import { absolutify, existsSync, Logger } from '@tylertech/forge-build-tools';
+import { absolutify, Logger } from '@tylertech/forge-build-tools';
 import karma, { ConfigOptions, constants, FilePattern } from 'karma';
-import { sep, resolve as pathResolve, join } from 'path';
+import { resolve as pathResolve, sep } from 'path';
+import { TsconfigPathsPlugin } from 'tsconfig-paths-webpack-plugin';
 import wepback, { Configuration } from 'webpack';
 import { IConfig } from '../core/definitions.js';
 import { findUp } from './utils.js';
-import { TsconfigPathsPlugin } from 'tsconfig-paths-webpack-plugin';
 
-import * as sass from 'sass';
+import karmaChromeLauncher from 'karma-chrome-launcher';
+import karmaCoverageIstanbulReporter from 'karma-coverage-istanbul-reporter';
+import karmaFirefoxLauncher from 'karma-firefox-launcher';
+import karmaHTML2JSPreprocess from 'karma-html2js-preprocessor';
 import karmaJasmine from 'karma-jasmine';
-import karmaWebpack from 'karma-webpack';
+import karmaJasmineHtmlReporter from 'karma-jasmine-html-reporter';
+import karmaJasmineOrderReporter from 'karma-jasmine-order-reporter';
 import karmaSourcemapLoader from 'karma-sourcemap-loader';
 import karmaSpecReporter from 'karma-spec-reporter';
-import karmaJasmineHtmlReporter from 'karma-jasmine-html-reporter';
-import karmaHTML2JSPreprocess from 'karma-html2js-preprocessor';
-import karmaJasmineOrderReporter from 'karma-jasmine-order-reporter';
-import karmaChromeLauncher from 'karma-chrome-launcher';
-import karmaFirefoxLauncher from 'karma-firefox-launcher';
-import karmaCoverageIstanbulReporter from 'karma-coverage-istanbul-reporter';
+import karmaWebpack from 'karma-webpack';
+import * as sass from 'sass';
 
 const { SourceMapDevToolPlugin } = wepback;
 const { Server } = karma;
 
-import sassPreprocessor from '../core/karma/plugins/sass-preprocessor.js';
 import { fileURLToPath } from 'url';
+import sassPreprocessor from '../core/karma/plugins/sass-preprocessor.js';
 
 export interface ITestEnv {
   components?: string[];

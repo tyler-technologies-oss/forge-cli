@@ -4,7 +4,7 @@ import deepMerge from 'deepmerge';
 import { OS, IPackageJson, deepCopy } from '@tylertech/forge-build-tools';
 
 import { IConfig, ICliConfig, IProjectConfig } from './definitions.js';
-import { DEFAULT_PROJECT_CONFIG, CURRENT_TEMPLATE_VERSION } from '../constants.js';
+import { DEFAULT_PROJECT_CONFIG } from '../constants.js';
 import { ICommand } from './command.js';
 import { loadPackageJson } from '../utils/utils.js';
 
@@ -24,23 +24,18 @@ export class Configuration implements IConfig {
   public cli: ICliConfig = {
     binDir: '',
     rootDir: '',
-    templatesDirName: 'templates',
-    templatesDir: '',
-    templateVersion: CURRENT_TEMPLATE_VERSION,
     package: {} as IPackageJson
   };
 
   /**
    * Creates a new instance of the `Configuration`.
-   * @param templateVersion The version of the templates to use for scaffolding.
    * @param os The current operating system.
    * @param currentWorkingDir The current working directory path.
    * @param cliBinDir The path to the bin directory holding our CLI executable.
    * @param projectConfig The existing project configuration where the command is running.
    * @param commands The list of commands available in the CLI.
    */
-  constructor(templateVersion: string, os: string, currentWorkingDir: string, cliBinDir: string, projectConfig: IProjectConfig | undefined, public commands: ICommand[]) {
-    this.cli.templateVersion = templateVersion;
+  constructor(os: string, currentWorkingDir: string, cliBinDir: string, projectConfig: IProjectConfig | undefined, public commands: ICommand[]) {
     this._initOS(os);
     this._initCwd(currentWorkingDir);
     this._initCliConfig(cliBinDir);
@@ -91,7 +86,6 @@ export class Configuration implements IConfig {
   private async _initCliConfig(cliBinDir: string): Promise<void> {
     this.cli.binDir = resolve(cliBinDir);
     this.cli.rootDir = join(cliBinDir, '../../');
-    this.cli.templatesDir = join(this.cli.rootDir, this.cli.templatesDirName);
     this.cli.package = await loadPackageJson(this.cli.rootDir);
   }
 
