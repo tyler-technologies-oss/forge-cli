@@ -1,9 +1,0 @@
-{
-  "$schema": "./node_modules/@tylertech/forge-cli/schema.json",
-  "packageOrg": "<%= data.packageOrg %>",
-  "packageName": "<%= data.packageName %>",
-  "registry": "<%= data.registry %>",
-  "static": {
-    "distPath": "static"
-  }
-}

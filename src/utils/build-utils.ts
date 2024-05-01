@@ -27,7 +27,6 @@ const { dirname, extname, join, relative, resolve } = cpath;
 export interface IBuildTaskConfiguration {
   context: IProjectConfig;
   paths: IProjectConfigPaths;
-  packageName: string;
   cwd: string;
   args: { [key: string]: any };
   quiet?: boolean;
@@ -63,20 +62,24 @@ export async function lintTask(dir: string, stylelintConfigPath: string, eslint:
 /** Generates a bundled ES module build of the library. */
 export async function generateStaticESModuleSources({
   outdir,
+  outfile,
   target,
   supported,
   bundle = true,
   minify = true,
+  splitting = false,
   entryPoints,
   external,
   metafile,
   metafileOutDir
 }: {
   outdir: string;
+  outfile?: string;
   target?: string | string[];
   supported?: Record<string, boolean>;
   bundle?: boolean;
   minify?: boolean;
+  splitting?: boolean;
   format?: string;
   metafile?: boolean;
   metafileOutDir?: string;
@@ -88,13 +91,14 @@ export async function generateStaticESModuleSources({
     target,
     supported,
     entryPoints,
-    splitting: true,
+    splitting,
     chunkNames: 'chunks/[name].[hash]',
     sourcemap: true,
     bundle,
     minify,
     metafile,
-    outdir,
+    outdir: outfile ? undefined : outdir,
+    outfile: outfile ? join(outdir, outfile) : undefined,
     external
   });
   if (result.metafile) {

@@ -4,9 +4,6 @@ import { ICommand } from './command.js';
 export interface ICliConfig {
   binDir: string;
   rootDir: string;
-  templatesDirName: string;
-  templatesDir: string;
-  templateVersion: string;
   package: IPackageJson;
 }
 
@@ -20,22 +17,21 @@ export interface IConfig {
 }
 
 export interface IProjectConfig {
-  templateVersion: string;
   libDirName: string;
   srcDirName: string;
-  demoDirName: string;
-  testDirName: string;
   distDirName: string;
   buildConfigFileName: string;
-  packageOrg: string;
-  packageName: string;
-  registry: string;
   license: IProjectLicenseConfig;
   paths: IProjectConfigPaths;
   build: IBuildProjectConfig;
-  karma: IKarmaProjectConfig;
   packageConfig: IPackageConfig;
   customElementsManifestConfig: ICustomElementsManifestConfig;
+  
+  /** @deprecated */
+  testDirName: string;
+
+  /** @deprecated */
+  karma: IKarmaProjectConfig;
 }
 
 export interface ICustomElementsManifestConfig {
@@ -45,10 +41,6 @@ export interface ICustomElementsManifestConfig {
 
 export interface IProjectLicenseConfig {
   header?: string;
-}
-
-export interface IProjectDemoConfig {
-  componentBundles: string[];
 }
 
 export interface IPackageConfig {
@@ -66,8 +58,8 @@ export interface IBuildProjectConfig {
   rollup: IRollupProjectConfig;
   esbuild: IEsbuildProjectConfig;
   tsconfigPath: string;
-  demo: IProjectDemoConfig;
   static: IBuildStaticConfig;
+  distributionBundleName: string;
 }
 
 export interface IWebpackProjectConfig {
@@ -130,7 +122,6 @@ export interface IProjectConfigPaths {
   rootDir: string;
   distDir: string;
   distBuildDir: string;
-  distDemoDir: string;
   distStylesDir: string;
   distReleaseDir: string;
   distMetadataDir: string;
@@ -138,7 +129,6 @@ export interface IProjectConfigPaths {
   libDir: string;
   testDir: string;
   specDir: string;
-  demoDir: string;
   stylelintConfigPath: string;
   webpackConfigPath: string;
   karmaConfigPath: string;

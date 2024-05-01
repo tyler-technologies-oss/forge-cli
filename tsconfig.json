@@ -12,7 +12,8 @@
     "noEmitOnError": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "outDir": "dist/esm"
+    "declaration": true,
+    "outDir": "dist"
   },
   "files": [
     "src/index.ts"
