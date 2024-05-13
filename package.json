@@ -33,7 +33,7 @@
     "release": "auto shipit"
   },
   "dependencies": {
-    "@custom-elements-manifest/analyzer": "^0.10.2",
+    "@custom-elements-manifest/analyzer": "0.10.1",
     "@tylertech/forge-build-tools": "3.0.0-next.7",
     "autoprefixer": "^10.4.19",
     "browser-sync": "^3.0.2",
