@@ -102,7 +102,7 @@ export async function build({
   
   // Compile TypeScript to JavaScript ESM (includes bare module specifiers)
   await runTask('Compiling sources...', async () => {
-    await compileTypeScriptTask(config, stagingSrcDir, stagingSrcDir, esmBuildDir, ts.ScriptTarget.ES2017, ts.ModuleKind.ES2015, true, typingsDir);
+    await compileTypeScriptTask(config, stagingSrcDir, stagingSrcDir, esmBuildDir, ts.ScriptTarget.ES2020, ts.ModuleKind.ES2015, true, typingsDir);
   }, quiet);
 
   // Get the full library entry point
@@ -150,7 +150,8 @@ export async function build({
   // Generates Custom Elements Manifest file.
   if (!config.context.customElementsManifestConfig?.disableAutoGeneration) {
     await runTask('Generating custom elements manifest...', async () => {
-      await generateCustomElementsManifest(config.context, stagingSrcDir, { quiet });
+      const outDir = config.context.customElementsManifestConfig.outputPath;
+      await generateCustomElementsManifest(config.context, config.context.paths.rootDir, { outDir, quiet });
     });
   }
 }
@@ -170,7 +171,7 @@ export async function createDistributionPackage({
     const releaseRootDir = join(config.paths.distReleaseDir, packageJson.name);
     const releaseDistDir = join(releaseRootDir, 'dist');
     const releaseEsmDir = join(releaseRootDir, 'esm');
-    const releaseStylesDir = join(releaseRootDir, 'styles');
+    const releaseSassDir = join(releaseRootDir, 'sass');
     const releaseDistEsmDir = join(releaseDistDir, 'esm');
     const releaseTypingsDir = releaseEsmDir;
     const buildEsmDir = join(buildOutputDir, 'esm');
@@ -179,6 +180,7 @@ export async function createDistributionPackage({
     const buildSrcDir = join(buildOutputDir, 'src');
     const esbuildOutputDir = join(buildOutputDir, 'esbuild');
     const bundleOutputDir = join(buildOutputDir, 'bundle');
+    const customElementsOutputDir = join(config.paths.rootDir, config.context.customElementsManifestConfig.outputPath ?? 'dist/cem');
 
     // Clean previous release build
     await deleteDir(config.paths.distReleaseDir);
@@ -188,7 +190,7 @@ export async function createDistributionPackage({
     await mkdirp(releaseDistDir);
     await mkdirp(releaseEsmDir);
     await mkdirp(releaseDistEsmDir);
-    await mkdirp(releaseStylesDir);
+    await mkdirp(releaseSassDir);
     await mkdirp(releaseTypingsDir);
 
     // Append license headers to all files in the package
@@ -197,14 +199,14 @@ export async function createDistributionPackage({
     // Copy files from build output to the package structure
     const customElementsFiles = config.context.customElementsManifestConfig?.disableAutoGeneration
       ? []
-      : [{ path: join(buildSrcDir, 'custom-elements.json'), rootPath: buildSrcDir, outputPath: releaseRootDir }];
+      : [{ path: join(customElementsOutputDir, 'custom-elements.json'), rootPath: customElementsOutputDir, outputPath: releaseRootDir }];
     const fileConfigs: IFileCopyConfig[] = [
       { path: join(buildEsmDir, '**/*.js*'), rootPath: buildEsmDir, outputPath: releaseEsmDir },
       { path: join(esbuildOutputDir, '**/*.js*'), rootPath: esbuildOutputDir, outputPath: releaseDistEsmDir },
       { path: join(bundleOutputDir, '**/*.js*'), rootPath: bundleOutputDir, outputPath: releaseDistDir },
       { path: join(buildTypingsDir, '**/*.d.ts'), rootPath: buildTypingsDir, outputPath: releaseTypingsDir },
       { path: join(buildCssDir, '**/*.css'), rootPath: buildCssDir, outputPath: releaseDistDir },
-      { path: join(buildSrcDir, '**/*.scss'), rootPath: buildSrcDir, outputPath: releaseStylesDir },
+      { path: join(buildSrcDir, '**/*.scss'), rootPath: buildSrcDir, outputPath: releaseSassDir },
       { path: join(projectRootDir, 'README.md'), rootPath: projectRootDir, outputPath: releaseRootDir },
       { path: join(projectRootDir, 'LICENSE'), rootPath: projectRootDir, outputPath: releaseRootDir },
       ...customElementsFiles
