@@ -37,6 +37,7 @@ export interface IProjectConfig {
 export interface ICustomElementsManifestConfig {
   configFileName?: string;
   disableAutoGeneration?: boolean;
+  outputPath?: string;
 }
 
 export interface IProjectLicenseConfig {

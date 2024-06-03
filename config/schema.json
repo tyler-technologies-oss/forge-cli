@@ -84,6 +84,11 @@
           "type": "boolean",
           "description": "Disables automatic generation of the custom elements manifest as part of the build.",
           "default": "false"
+        },
+        "outputPath": {
+          "type": "string",
+          "description": "The path to output the custom elements manifest to. This is relative to the project root.",
+          "default": "dist/cem"
         }
       }
     },

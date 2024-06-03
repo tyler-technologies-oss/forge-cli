@@ -10,7 +10,7 @@ export interface IGenerateCustomElementsManifestOptions {
 
 export async function generateCustomElementsManifest(
   projectConfig: IProjectConfig,
-  srcDir: string,
+  cwd: string,
   { configFileName, outDir, quiet = true }: IGenerateCustomElementsManifestOptions = {}
 ): Promise<string> {
   let cmd = 'npx custom-elements-manifest analyze';
@@ -23,8 +23,8 @@ export async function generateCustomElementsManifest(
   }
 
   if (outDir) {
-    cmd += ` --outdir ${cpath.relative(srcDir, outDir)}`;
+    cmd += ` --outdir ${cpath.relative(cwd, outDir)}`;
   }
 
-  return await runCommand(cmd, srcDir, !quiet);
+  return await runCommand(cmd, cwd, !quiet);
 }
