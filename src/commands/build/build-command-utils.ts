@@ -150,7 +150,8 @@ export async function build({
   // Generates Custom Elements Manifest file.
   if (!config.context.customElementsManifestConfig?.disableAutoGeneration) {
     await runTask('Generating custom elements manifest...', async () => {
-      await generateCustomElementsManifest(config.context, config.context.paths.rootDir, { outDir: 'dist/cem', quiet });
+      const outDir = config.context.customElementsManifestConfig.outputPath;
+      await generateCustomElementsManifest(config.context, config.context.paths.rootDir, { outDir, quiet });
     });
   }
 }

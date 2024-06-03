@@ -36,7 +36,9 @@ export const DEFAULT_PROJECT_CONFIG: IProjectConfig = {
     distributionBundleName: 'lib.js'
   },
   packageConfig: {},
-  customElementsManifestConfig: {},
+  customElementsManifestConfig: {
+    outputPath: 'dist/cem'
+  },
   karma: {},
   paths: {
     rootDir: '.',
