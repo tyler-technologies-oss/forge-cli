@@ -306,6 +306,12 @@ function createKarmaWebpackConfig(cliConfig: IConfig): Configuration {
     module: {
       rules: [
         {
+          test: /\.m?js/, // fix:issue: https://github.com/webpack/webpack/issues/11467
+          resolve: {
+            fullySpecified: false,
+          }
+        },
+        {
           test: /\.js$/,
           use: ['source-map-loader'],
           enforce: 'pre',
