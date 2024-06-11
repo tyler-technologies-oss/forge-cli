@@ -1,3 +1,19 @@
+# v3.0.0 (Tue Jun 11 2024)
+
+#### 💥 Breaking Change
+
+- feat: initial 3.0 GA release [#26](https://github.com/tyler-technologies-oss/forge-cli/pull/26) ([@DRiFTy17](https://github.com/DRiFTy17))
+
+#### 🐛 Bug Fix
+
+- fix: upgrade auto to fix release issues [#19](https://github.com/tyler-technologies-oss/forge-cli/pull/19) ([@DRiFTy17](https://github.com/DRiFTy17))
+
+#### Authors: 1
+
+- Kieran Nichols ([@DRiFTy17](https://github.com/DRiFTy17))
+
+---
+
 # v2.6.1 (Tue Feb 06 2024)
 
 #### 🐛 Bug Fix
