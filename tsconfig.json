@@ -1,22 +1,21 @@
 {
   "compilerOptions": {
-    "target": "es2017",
-    "module": "commonjs",
+    "target": "es2020",
+    "module": "esnext",
     "moduleResolution": "node",
-    "lib": ["es2015", "dom", "es2017"],
+    "lib": ["es2020"],
     "noImplicitAny": false,
     "strictNullChecks": true,
-    "allowJs": false,
     "experimentalDecorators": true,
     "importHelpers": true,
     "noEmitHelpers": true,
     "noEmitOnError": true,
     "esModuleInterop": true,
-    "baseUrl": "."
+    "skipLibCheck": true,
+    "declaration": true,
+    "outDir": "dist"
   },
-  "exclude": [
-    "node_modules",
-    "templates",
-    "dist"
+  "files": [
+    "src/index.ts"
   ]
 }

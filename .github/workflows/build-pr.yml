@@ -2,24 +2,10 @@ name: Build Pull Request
 
 on:
   pull_request:
-    paths:
-      - '.github/workflows/**/*'
-      - '.eslintrc.json'
-      - 'gulpfile.ts'
-      - 'tsconfig.json'
-      - 'bin/**/*'
-      - 'config/**/*'
-      - 'src/**/*'
-      - 'templates/**/*'
-      - 'test/**/*'
-      - 'package.json'
-      - 'package-lock.json'
 
 jobs:
   build:
-    name: Build and Test
-    uses: tyler-technologies-oss/forge-automation-shared/.github/workflows/wf-build-and-test.yml@v2.8.1
-    with:
-      TESTS_ENABLED: true
+    name: Build
+    uses: tyler-technologies-oss/forge-automation-shared/.github/workflows/wf-build-and-test.yml@v2.10.3
     secrets:
       NPM_TOKEN: ${{ secrets.FORGE_NPM_TOKEN }}

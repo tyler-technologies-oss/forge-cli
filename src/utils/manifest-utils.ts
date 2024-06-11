@@ -1,20 +1,30 @@
 import { runCommand } from '@tylertech/forge-build-tools';
-import { IProjectConfig } from '../core/definitions';
-import { relative } from 'canonical-path';
+import { IProjectConfig } from '../core/definitions.js';
+import cpath from 'canonical-path';
 
-export async function generateCustomElementsManifest(projectConfig: IProjectConfig, srcDir: string, config?: { configFileName?: string; outDir?: string }): Promise<string> {
+export interface IGenerateCustomElementsManifestOptions {
+  configFileName?: string;
+  outDir?: string;
+  quiet?: boolean;
+}
+
+export async function generateCustomElementsManifest(
+  projectConfig: IProjectConfig,
+  cwd: string,
+  { configFileName, outDir, quiet = true }: IGenerateCustomElementsManifestOptions = {}
+): Promise<string> {
   let cmd = 'npx custom-elements-manifest analyze';
-  const configFileName = config?.configFileName ?? projectConfig.customElementsManifestConfig?.configFileName;
+  configFileName = configFileName ?? projectConfig.customElementsManifestConfig?.configFileName;
 
   if (configFileName) {
-    cmd += `--config ${configFileName}`;
+    cmd += ` --config ${cpath.join(projectConfig.paths.rootDir, configFileName)}`;
   } else {
     cmd += ` --globs "**/*.ts"`;
   }
 
-  if (config?.outDir) {
-    cmd += ` --outdir ${relative(srcDir, config.outDir)}`;
+  if (outDir) {
+    cmd += ` --outdir ${cpath.relative(cwd, outDir)}`;
   }
 
-  return await runCommand(cmd, srcDir, false);
+  return await runCommand(cmd, cwd, !quiet);
 }

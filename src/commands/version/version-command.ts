@@ -1,6 +1,6 @@
 import { ParsedArgs } from 'minimist';
 
-import { ICommand, ICommandParameter } from '../../core/command';
+import { ICommand, ICommandParameter } from '../../core/command.js';
 import { Logger } from '@tylertech/forge-build-tools';
 
 /**

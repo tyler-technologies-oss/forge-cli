@@ -1,7 +1,7 @@
-import { ICommand, ICommandParameter, ICommandOption } from '../../core/command';
-import { TestComponentCommand } from './test-component-command';
-import { generateKarmaConfig, startKarma } from '../../utils/test-utils';
-import { assertBoolean } from '../../utils/utils';
+import { ICommand, ICommandParameter, ICommandOption } from '../../core/command.js';
+import { TestComponentCommand } from './test-component-command.js';
+import { generateKarmaConfig, startKarma } from '../../utils/test-utils.js';
+import { assertBoolean } from '../../utils/utils.js';
 
 /**
  * The command definition for the `test` command.

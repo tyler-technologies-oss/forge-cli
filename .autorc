@@ -1,7 +1,5 @@
 plugins:
-  - - npm
-    - setRcToken: false
-      publishFolder: dist/
+  - npm
   - conventional-commits
   - released
   - first-time-contributor

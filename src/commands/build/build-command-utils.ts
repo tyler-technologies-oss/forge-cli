@@ -1,4 +1,4 @@
-import { join, parse, resolve } from 'canonical-path';
+import cpath from 'canonical-path';
 import ts from 'typescript';
 import {
   absolutify,
@@ -24,8 +24,10 @@ import {
   IBuildTaskConfiguration,
   inlineContentTask,
   resolveBuildJson
-} from '../../utils/build-utils';
-import { generateCustomElementsManifest } from '../../utils/manifest-utils';
+} from '../../utils/build-utils.js';
+import { generateCustomElementsManifest } from '../../utils/manifest-utils.js';
+
+const { join, parse, resolve } = cpath;
 
 /**
  * Prepares the staging directory for a new build of the library.
@@ -54,7 +56,7 @@ export async function prebuild({
 
     // Mirror the source files to the staging directory
     const stagingSrcDir = join(buildOutputDir, 'src');
-    await copyFilesAsync(join(srcDir, '**/*'), srcDir, stagingSrcDir);
+    await copyFilesAsync(join(srcDir, '**/*.*'), srcDir, stagingSrcDir, ['**/*.test.ts']);
   }, quiet);
 }
 
@@ -70,6 +72,7 @@ export async function build({
   const stagingSrcDir = join(buildOutputDir, 'src');
   const esmBuildDir = join(buildOutputDir, 'esm');
   const esbuildBuildDir = join(buildOutputDir, 'esbuild');
+  const bundleBuildDir = join(buildOutputDir, 'bundle');
   const typingsDir = join(buildOutputDir, 'typings');
   const cssBuildDir = join(buildOutputDir, 'css');
   const buildConfig = await resolveBuildJson(stagingSrcDir);
@@ -96,25 +99,40 @@ export async function build({
     await inlineContentTask(stagingSrcDir);
   }, quiet);
 
+  
   // Compile TypeScript to JavaScript ESM (includes bare module specifiers)
   await runTask('Compiling sources...', async () => {
-    await compileTypeScriptTask(config, stagingSrcDir, stagingSrcDir, esmBuildDir, ts.ScriptTarget.ES2017, ts.ModuleKind.ES2015, true, typingsDir);
+    await compileTypeScriptTask(config, stagingSrcDir, stagingSrcDir, esmBuildDir, ts.ScriptTarget.ES2020, ts.ModuleKind.ES2015, true, typingsDir);
   }, quiet);
+
+  // Get the full library entry point
+  const libEntry = join(stagingSrcDir, `${entryName}.ts`);
+
+  // Attempt to inherit the ES build target from the build tsconfig if we don't have one set in the project configuration
+  let buildTarget = config.context.build.esbuild.target;
+  const tsconfigPath = absolutify(config.context.build.tsconfigPath, config.context.paths.rootDir);
+  if (!buildTarget && await existsAsync(tsconfigPath)) {
+    const buildTsconfig = await readJsonFile<any>(tsconfigPath);
+    buildTarget = buildTsconfig.compilerOptions?.target;
+  }
+  
+  await runTask('Creating ESM distribution bundle', async () => {
+    await generateStaticESModuleSources({
+      outdir: bundleBuildDir,
+      outfile: config.context.build.distributionBundleName ?? 'lib.js',
+      target: buildTarget,
+      supported: config.context.build.esbuild.supported,
+      minify: config.context.build.esbuild.minify,
+      bundle: true,
+      entryPoints: [libEntry]
+    });
+  });
 
   if (config.context.build.static.enabled) {
     // Bundles the library with code-splitting to generate a self-contained ESM distribution
-    await runTask('Bundling ESM distribution sources...', async () => {
-      // Build the library entry points
-      const libEntry = join(stagingSrcDir, `${entryName}.ts`);
+    await runTask('Compiling code-split ESM distribution sources...', async () => {
+      // Collect all the component entry points
       const componentEntries = await globFilesAsync(join(stagingSrcDir, '**/index.ts')) as string[];
-
-      // Attempt to inherit the ES build target from the build tsconfig if we don't have one set in the project configuration
-      let buildTarget = config.context.build.esbuild.target;
-      const tsconfigPath = absolutify(config.context.build.tsconfigPath, config.context.paths.rootDir);
-      if (!buildTarget && await existsAsync(tsconfigPath)) {
-        const buildTsconfig = await readJsonFile<any>(tsconfigPath);
-        buildTarget = buildTsconfig.compilerOptions?.target;
-      }
 
       // Generate the static ES module distribution sources
       // Note: this will bundle dependencies with code splitting, and **without** bare module specifiers
@@ -132,7 +150,8 @@ export async function build({
   // Generates Custom Elements Manifest file.
   if (!config.context.customElementsManifestConfig?.disableAutoGeneration) {
     await runTask('Generating custom elements manifest...', async () => {
-      await generateCustomElementsManifest(config.context, stagingSrcDir);
+      const outDir = config.context.customElementsManifestConfig.outputPath;
+      await generateCustomElementsManifest(config.context, config.context.paths.rootDir, { outDir, quiet });
     });
   }
 }
@@ -152,7 +171,7 @@ export async function createDistributionPackage({
     const releaseRootDir = join(config.paths.distReleaseDir, packageJson.name);
     const releaseDistDir = join(releaseRootDir, 'dist');
     const releaseEsmDir = join(releaseRootDir, 'esm');
-    const releaseStylesDir = join(releaseRootDir, 'styles');
+    const releaseSassDir = join(releaseRootDir, 'sass');
     const releaseDistEsmDir = join(releaseDistDir, 'esm');
     const releaseTypingsDir = releaseEsmDir;
     const buildEsmDir = join(buildOutputDir, 'esm');
@@ -160,6 +179,8 @@ export async function createDistributionPackage({
     const buildCssDir = join(buildOutputDir, 'css');
     const buildSrcDir = join(buildOutputDir, 'src');
     const esbuildOutputDir = join(buildOutputDir, 'esbuild');
+    const bundleOutputDir = join(buildOutputDir, 'bundle');
+    const customElementsOutputDir = join(config.paths.rootDir, config.context.customElementsManifestConfig.outputPath ?? 'dist/cem');
 
     // Clean previous release build
     await deleteDir(config.paths.distReleaseDir);
@@ -169,7 +190,7 @@ export async function createDistributionPackage({
     await mkdirp(releaseDistDir);
     await mkdirp(releaseEsmDir);
     await mkdirp(releaseDistEsmDir);
-    await mkdirp(releaseStylesDir);
+    await mkdirp(releaseSassDir);
     await mkdirp(releaseTypingsDir);
 
     // Append license headers to all files in the package
@@ -178,13 +199,14 @@ export async function createDistributionPackage({
     // Copy files from build output to the package structure
     const customElementsFiles = config.context.customElementsManifestConfig?.disableAutoGeneration
       ? []
-      : [{ path: join(buildSrcDir, 'custom-elements.json'), rootPath: buildSrcDir, outputPath: releaseRootDir }];
+      : [{ path: join(customElementsOutputDir, 'custom-elements.json'), rootPath: customElementsOutputDir, outputPath: releaseRootDir }];
     const fileConfigs: IFileCopyConfig[] = [
       { path: join(buildEsmDir, '**/*.js*'), rootPath: buildEsmDir, outputPath: releaseEsmDir },
       { path: join(esbuildOutputDir, '**/*.js*'), rootPath: esbuildOutputDir, outputPath: releaseDistEsmDir },
+      { path: join(bundleOutputDir, '**/*.js*'), rootPath: bundleOutputDir, outputPath: releaseDistDir },
       { path: join(buildTypingsDir, '**/*.d.ts'), rootPath: buildTypingsDir, outputPath: releaseTypingsDir },
       { path: join(buildCssDir, '**/*.css'), rootPath: buildCssDir, outputPath: releaseDistDir },
-      { path: join(buildSrcDir, '**/*.scss'), rootPath: buildSrcDir, outputPath: releaseStylesDir },
+      { path: join(buildSrcDir, '**/*.scss'), rootPath: buildSrcDir, outputPath: releaseSassDir },
       { path: join(projectRootDir, 'README.md'), rootPath: projectRootDir, outputPath: releaseRootDir },
       { path: join(projectRootDir, 'LICENSE'), rootPath: projectRootDir, outputPath: releaseRootDir },
       ...customElementsFiles
@@ -237,6 +259,7 @@ export async function copyBundledDistributionAssets({
 }): Promise<void> {
   return runTask('Copying static distribution assets...', async () => {
     const jsBuildDir = join(buildOutputDir, 'esbuild');
+    const jsBundleBuildDir = join(buildOutputDir, 'bundle');
     const cssBuildDir = join(buildOutputDir, 'css');
     const staticOutputDir = join(config.paths.distDir, config.context.build.static.distPath, packageJson.name);
 
@@ -246,6 +269,7 @@ export async function copyBundledDistributionAssets({
     // Copy all required assets and retain directory structure
     const fileConfigs: IFileCopyConfig[] = [
       { path: join(jsBuildDir, '**/*.js*'), rootPath: jsBuildDir, outputPath: staticOutputDir },
+      { path: join(jsBundleBuildDir, '**/*.js*'), rootPath: jsBundleBuildDir, outputPath: staticOutputDir },
       { path: join(cssBuildDir, '**/*.css'), rootPath: cssBuildDir, outputPath: staticOutputDir }
     ];
     await copyFilesMultiple(fileConfigs);

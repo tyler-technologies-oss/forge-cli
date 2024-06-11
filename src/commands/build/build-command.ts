@@ -1,11 +1,13 @@
-import { formatHrTime, loadPackageJson, Logger } from '@tylertech/forge-build-tools';
-import { join } from 'canonical-path';
+import { formatHrTime, Logger } from '@tylertech/forge-build-tools';
+import cpath from 'canonical-path';
 import chalk from 'chalk';
-import { FULL_BUILD_DIR_NAME, TEMP_BUILD_DIR_NAME } from '../../constants';
-import { ICommand, ICommandOption, ICommandParameter } from '../../core/command';
-import { cleanup, IBuildTaskConfiguration, lintTask } from '../../utils/build-utils';
-import { assertBoolean, getTimeStamp } from '../../utils/utils';
-import { build, copyBundledDistributionAssets, createDistributionPackage, prebuild } from './build-command-utils';
+import { FULL_BUILD_DIR_NAME, TEMP_BUILD_DIR_NAME } from '../../constants.js';
+import { ICommand, ICommandOption, ICommandParameter } from '../../core/command.js';
+import { cleanup, IBuildTaskConfiguration, lintTask } from '../../utils/build-utils.js';
+import { assertBoolean, getTimeStamp, loadPackageJson } from '../../utils/utils.js';
+import { build, copyBundledDistributionAssets, createDistributionPackage, prebuild } from './build-command-utils.js';
+
+const { join } = cpath;
 
 /** The command definition for the main library build. */
 export class BuildCommand implements ICommand {
@@ -14,12 +16,6 @@ export class BuildCommand implements ICommand {
   public description = 'Builds an npm package from the entire component project.';
   public subCommands: ICommand[] = [];
   public options: ICommandOption[] = [
-    {
-      name: 'cleancss',
-      type: Boolean,
-      description: 'Removes all unused selectors from component CSS files.',
-      defaultValue: 'false'
-    },
     {
       name: 'lint',
       type: Boolean,
@@ -32,7 +28,6 @@ export class BuildCommand implements ICommand {
     const ctx: IBuildTaskConfiguration = {
       context: param.config.context,
       paths: param.config.context.paths,
-      packageName: param.config.context.packageName,
       cwd: param.config.cwd,
       args: param.args
     };
@@ -57,7 +52,7 @@ export async function buildCommand(config: IBuildTaskConfiguration): Promise<voi
   const buildRoot = join(config.context.paths.distBuildDir, FULL_BUILD_DIR_NAME);
   const buildOutputDir = join(buildRoot, TEMP_BUILD_DIR_NAME);
   const srcDir = config.context.paths.libDir;
-  const packageJson = loadPackageJson(config.paths.rootDir);
+  const packageJson = await loadPackageJson(config.paths.rootDir);
   const lintCode = assertBoolean(config.args.lint, true);
   
   if (lintCode) {

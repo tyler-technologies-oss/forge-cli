@@ -1,6 +1,6 @@
-import { ICommand, ICommandParameter } from '../../core/command';
-import { lintESLintTask } from '../../utils/lint-utils';
-import { assertBoolean } from '../../utils/utils';
+import { ICommand, ICommandParameter } from '../../core/command.js';
+import { lintESLintTask } from '../../utils/lint-utils.js';
+import { assertBoolean } from '../../utils/utils.js';
 
 export class LintESLintCommand implements ICommand {
   public name = 'eslint';

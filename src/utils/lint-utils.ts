@@ -1,6 +1,7 @@
-import { join } from 'canonical-path';
-
+import cpath from 'canonical-path';
 import { runTask, lintSass, lintESLint, globFilesAsync, ILintESLintResult, ILintESLintConfiguration } from '@tylertech/forge-build-tools';
+
+const { join } = cpath;
 
 export interface ILintESLintCommandOptions {
   fix?: boolean;

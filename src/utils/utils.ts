@@ -1,33 +1,13 @@
-import { parse, join, dirname } from 'path';
-import moment from 'moment';
-import chalk from 'chalk';
-import { InstallFileDescriptor, existsAsync, existsSync, Logger, statAsync } from '@tylertech/forge-build-tools';
-import getPackageJson, { AbbreviatedMetadata } from 'package-json';
-import * as semver from 'semver';
-import os from 'os';
+import { existsSync, IPackageJson, readFileAsync } from '@tylertech/forge-build-tools';
 import childProcess from 'child_process';
+import moment from 'moment';
+import os from 'os';
+import { dirname, join, parse } from 'path';
 
 export const DEFAULT_TIMESTAMP_FORMAT = 'hh:mm:ss';
 
 export function getTimeStamp(format?: string): string {
   return moment().format(format || DEFAULT_TIMESTAMP_FORMAT);
-}
-
-/**
- * Prints the installation status (created/failed) of each file that was attempted to be installed.
- * @param files The files to install.
- * @param rootPath The path to the root of the installation directory.
- */
-export async function printInstallationSummary(files: InstallFileDescriptor[], rootPath: string): Promise<void> {
-  for (const file of files) {
-    const pathFromRoot = file.outputPath.replace(rootPath, '').replace(/^\/?/, '');
-    if (await existsAsync(file.outputPath)) {
-      const stats = await statAsync(file.outputPath);
-      Logger.print(`${chalk.green('CREATED')} ${pathFromRoot} (${stats.size} bytes)`);
-    } else {
-      Logger.print(`${chalk.red('FAILED')} ${pathFromRoot}`);
-    }
-  }
 }
 
 /**
@@ -78,47 +58,6 @@ export function findUp(names: string | string[], from: string): string | null {
   return null;
 }
 
-/**
- * Groups a list of items by the value returned from the grouper functions.
- * @param xs The list to group.
- * @param f The grouper function.
- */
-export function groupBy<T>(xs: T[], f: (item: T) => any): { [key: string]: T[] } {
-  return xs.reduce((r, v, i, a, k = f(v)) => ((r[k] || (r[k] = [])).push(v), r), {});
-}
-
-/**
- * Checks if a specific package is out of date with what is on the npm registry.
- * @param packageName The name of the package to check.
- * @param packageRegistry The npm registry to use when checking the package.
- * @param currentVersion The current version of the package to check.
- * @returns True if the current package vesion is less than the one in the registry.
- */
-export async function isOutdated(packageName: string, packageRegistry: string | undefined, currentVersion: string): Promise<boolean> {
-  if (!packageName) {
-    throw new Error('Invalid package name.');
-  }
-
-  if (!currentVersion || !semver.valid(currentVersion)) {
-    throw new Error('Invalid package version.');
-  }
-
-  let packageJson: AbbreviatedMetadata;
-  try {
-    packageJson = await getPackageJson(packageName, { registryUrl: packageRegistry });
-  } catch (e) {
-    Logger.warn('Unable to determine the latest CLI version. Have you updated your npm registry settings?');
-    return false;
-  }
-    
-  if (!packageJson) {
-    throw new Error('Unable to determine the latest version of the CLI.');
-  }
-
-  const latestVersion = packageJson.version as string;
-  return semver.lt(currentVersion, latestVersion);
-}
-
 export function getPhysicalCoreCount(): number {
   const platform = os.platform();
   
@@ -148,4 +87,13 @@ export function getPhysicalCoreCount(): number {
     amount = cores.length;
   }
   return amount;
+}
+
+export async function loadPackageJson(filePath: string): Promise<IPackageJson> {
+  const file = await readFileAsync(new URL(`${filePath}/package.json`, import.meta.url), 'utf-8');
+  try {
+    return JSON.parse(file);
+  } catch {
+    throw new Error(`Unable to locate package.json file at ${filePath}`);
+  }
 }
