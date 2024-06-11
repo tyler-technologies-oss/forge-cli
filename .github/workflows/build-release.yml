@@ -7,7 +7,7 @@ name: Build and Release
 on:
   push:
     branches:
-      - main
+      - version-2
     paths:
       - '.github/workflows/**/*'
       - '.eslintrc.json'
