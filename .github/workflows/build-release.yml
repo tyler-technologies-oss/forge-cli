@@ -3,13 +3,12 @@ name: Build and Release
 on:
   push:
     branches:
-      - next
+      - main
   workflow_dispatch:
 
 concurrency: build-release-${{ github.ref }}
 
 jobs:
-  ## Gather configuration required by other jobs
   wf-config:
     name: Workflow Configuration
     runs-on: ubuntu-latest
@@ -18,7 +17,6 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Prepare Repository
-        # Fetch full git history and tags
         run: git fetch --unshallow --tags
 
       - name: Cache Dependencies
@@ -53,7 +51,7 @@ jobs:
           ## We use `auto version` to calculate whether this is a release build or not
           VERSION_RESULT=$(npx auto version)
           echo "Version calculation result: ${VERSION_RESULT}"
-          if [[ "${VERSION_RESULT}" =~ ^(premajor|preminor|prepatch)$ ]]; then
+          if [[ "${VERSION_RESULT}" =~ ^(major|minor|patch|release)$ ]]; then
             echo "Release: true"
             echo "release=true" >> $GITHUB_OUTPUT
           else
@@ -61,7 +59,6 @@ jobs:
             echo "release=false" >> $GITHUB_OUTPUT
           fi
 
-      ## Detect if any specific files we care about have changed to help us know if we need to execute a CI build at all or not
       - name: Check File Changes
         uses: dorny/paths-filter@v3
         id: file-filter
@@ -81,22 +78,20 @@ jobs:
       is-release: ${{ steps.detect-release.outputs.release }}
       build-files-changed: ${{ steps.file-filter.outputs.build == 'true' }}
 
-  # This job will run on non-release builds for general CI validation only if files are changed that need to be built
   build:
     name: Build and Test
     needs: wf-config
-    uses: tyler-technologies-oss/forge-automation-shared/.github/workflows/wf-build-and-test.yml@v2.9.0
+    uses: tyler-technologies-oss/forge-automation-shared/.github/workflows/wf-build-and-test.yml@v2.10.3
     if: ${{ needs.wf-config.outputs.is-release == 'false' && (needs.wf-config.outputs.build-files-changed == 'true' || needs.wf-config.outputs.test-files-changed == 'true') }}
     with:
       BUILD_ENABLED: ${{ needs.wf-config.outputs.build-files-changed == 'true' }}
     secrets:
       NPM_TOKEN: ${{ secrets.FORGE_NPM_TOKEN }}
 
-  ## This job will run on release builds when publishing a new version
   build-and-release:
     name: Build and Release
     needs: wf-config
-    uses: tyler-technologies-oss/forge-automation-shared/.github/workflows/wf-build-release.yml@v2.9.0
+    uses: tyler-technologies-oss/forge-automation-shared/.github/workflows/wf-build-release.yml@v2.10.3
     if: ${{ needs.wf-config.outputs.is-release == 'true' }}
     with:
       PRODUCTION_RELEASE: true
