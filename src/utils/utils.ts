@@ -2,7 +2,7 @@ import { existsSync, IPackageJson, readFileAsync } from '@tylertech/forge-build-
 import childProcess from 'child_process';
 import moment from 'moment';
 import os from 'os';
-import { dirname, join, parse } from 'path';
+import cpath from 'canonical-path';
 
 export const DEFAULT_TIMESTAMP_FORMAT = 'hh:mm:ss';
 
@@ -41,18 +41,18 @@ export function findUp(names: string | string[], from: string): string | null {
   if (!Array.isArray(names)) {
     names = [names];
   }
-  const root = parse(from).root;
+  const root = cpath.parse(from).root;
 
   let currentDir = from;
   while (currentDir && currentDir !== root) {
     for (const name of names) {
-      const p = join(currentDir, name);
+      const p = cpath.join(currentDir, name);
       if (existsSync(p)) {
         return p;
       }
     }
 
-    currentDir = dirname(currentDir);
+    currentDir = cpath.dirname(currentDir);
   }
 
   return null;
@@ -90,7 +90,7 @@ export function getPhysicalCoreCount(): number {
 }
 
 export async function loadPackageJson(filePath: string): Promise<IPackageJson> {
-  const file = await readFileAsync(new URL(`${filePath}/package.json`, import.meta.url), 'utf-8');
+  const file = await readFileAsync(cpath.resolve(`${filePath}/package.json`), 'utf-8');
   try {
     return JSON.parse(file);
   } catch {
