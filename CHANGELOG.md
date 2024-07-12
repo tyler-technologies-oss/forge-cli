@@ -1,3 +1,15 @@
+# v3.0.1 (Fri Jul 12 2024)
+
+#### 🐛 Bug Fix
+
+- fix: windows compatibility with file paths [#27](https://github.com/tyler-technologies-oss/forge-cli/pull/27) ([@DRiFTy17](https://github.com/DRiFTy17))
+
+#### Authors: 1
+
+- Kieran Nichols ([@DRiFTy17](https://github.com/DRiFTy17))
+
+---
+
 # v3.0.0 (Tue Jun 11 2024)
 
 #### 💥 Breaking Change
