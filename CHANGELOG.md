@@ -1,3 +1,15 @@
+# v3.1.0 (Mon Sep 09 2024)
+
+#### 🚀 Enhancement
+
+- feat: add static ESM build configuration and expose access to sass options [#28](https://github.com/tyler-technologies-oss/forge-cli/pull/28) ([@DRiFTy17](https://github.com/DRiFTy17))
+
+#### Authors: 1
+
+- Kieran Nichols ([@DRiFTy17](https://github.com/DRiFTy17))
+
+---
+
 # v3.0.1 (Fri Jul 12 2024)
 
 #### 🐛 Bug Fix
