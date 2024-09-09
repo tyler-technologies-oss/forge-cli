@@ -29,9 +29,6 @@
     "customElementsManifestConfig": {
       "$ref": "#/definitions/customElementsManifestConfig"
     },
-    "registry": {
-      "$ref": "#/definitions/registry"
-    },
     "license": {
       "$ref": "#/definitions/license"
     },
@@ -150,6 +147,16 @@
             "enabled": {
               "type": "boolean",
               "description": "Whether to enable static build or not.",
+              "default": false
+            },
+            "includeWithPackage": {
+              "type": "boolean",
+              "description": "Whether to include the static build output in the npm package or not.",
+              "default": false
+            },
+            "codeSplitting": {
+              "type": "boolean",
+              "description": "Whether to enable code splitting or not on the static ESM build output.",
               "default": false
             },
             "distPath": {
@@ -286,6 +293,10 @@
               "default": true
             }
           }
+        },
+        "sassOptions": {
+          "description": "Options to provide to the sass compiler. See the Sass docs for more information.",
+          "type": "object"
         }
       }
     },

@@ -31,6 +31,8 @@ export const DEFAULT_PROJECT_CONFIG: IProjectConfig = {
     tsconfigPath: `${DEFAULT_SRC_DIR_NAME}/${DEFAULT_LIB_DIR_NAME}/${DEFAULT_BUILD_TSCONFIG_NAME}`,
     static: {
       enabled: true,
+      includeWithPackage: false,
+      codeSplitting: true,
       distPath: 'static'
     },
     distributionBundleName: 'lib.js'
