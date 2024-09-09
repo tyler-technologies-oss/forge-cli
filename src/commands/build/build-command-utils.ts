@@ -86,11 +86,11 @@ export async function build({
   // This task will compile and inline .scss|.html files into their referenced source files
   await runTask('Compiling and inlining assets...', async () => {
     // We need to first compile the configured global stylesheets to their output directory
-    await compileConfiguredStyleSheets(stagingSrcDir, stagingSrcDir, cssBuildDir);
+    await compileConfiguredStyleSheets(stagingSrcDir, stagingSrcDir, cssBuildDir, config.context.build.sassOptions);
 
     // Compile all Sass files across the library as these may be referenced components or other Sass files
     // Note: we can't guarantee or make any assumptions that there isn't duplication of work with the step above unfortunately...
-    await compileSassTask(stagingSrcDir, stagingSrcDir);
+    await compileSassTask(stagingSrcDir, stagingSrcDir, config.context.build.sassOptions);
 
     // Replace the .scss imports with .css extension in the staging files to allow our inline content task to execute
     await fixupRequireSassTask(stagingSrcDir);
@@ -124,6 +124,7 @@ export async function build({
       supported: config.context.build.esbuild.supported,
       minify: config.context.build.esbuild.minify,
       bundle: true,
+      splitting: false,
       entryPoints: [libEntry]
     });
   });
@@ -139,6 +140,7 @@ export async function build({
       await generateStaticESModuleSources({
         outdir: esbuildBuildDir,
         target: buildTarget,
+        splitting: config.context.build.static.codeSplitting,
         supported: config.context.build.esbuild.supported,
         minify: config.context.build.esbuild.minify,
         bundle: config.context.build.esbuild.bundle,
@@ -172,13 +174,11 @@ export async function createDistributionPackage({
     const releaseDistDir = join(releaseRootDir, 'dist');
     const releaseEsmDir = join(releaseRootDir, 'esm');
     const releaseSassDir = join(releaseRootDir, 'sass');
-    const releaseDistEsmDir = join(releaseDistDir, 'esm');
     const releaseTypingsDir = releaseEsmDir;
     const buildEsmDir = join(buildOutputDir, 'esm');
     const buildTypingsDir = join(buildOutputDir, 'typings');
     const buildCssDir = join(buildOutputDir, 'css');
     const buildSrcDir = join(buildOutputDir, 'src');
-    const esbuildOutputDir = join(buildOutputDir, 'esbuild');
     const bundleOutputDir = join(buildOutputDir, 'bundle');
     const customElementsOutputDir = join(config.paths.rootDir, config.context.customElementsManifestConfig.outputPath ?? 'dist/cem');
 
@@ -189,7 +189,6 @@ export async function createDistributionPackage({
     await mkdirp(releaseRootDir);
     await mkdirp(releaseDistDir);
     await mkdirp(releaseEsmDir);
-    await mkdirp(releaseDistEsmDir);
     await mkdirp(releaseSassDir);
     await mkdirp(releaseTypingsDir);
 
@@ -202,7 +201,6 @@ export async function createDistributionPackage({
       : [{ path: join(customElementsOutputDir, 'custom-elements.json'), rootPath: customElementsOutputDir, outputPath: releaseRootDir }];
     const fileConfigs: IFileCopyConfig[] = [
       { path: join(buildEsmDir, '**/*.js*'), rootPath: buildEsmDir, outputPath: releaseEsmDir },
-      { path: join(esbuildOutputDir, '**/*.js*'), rootPath: esbuildOutputDir, outputPath: releaseDistEsmDir },
       { path: join(bundleOutputDir, '**/*.js*'), rootPath: bundleOutputDir, outputPath: releaseDistDir },
       { path: join(buildTypingsDir, '**/*.d.ts'), rootPath: buildTypingsDir, outputPath: releaseTypingsDir },
       { path: join(buildCssDir, '**/*.css'), rootPath: buildCssDir, outputPath: releaseDistDir },
@@ -211,6 +209,14 @@ export async function createDistributionPackage({
       { path: join(projectRootDir, 'LICENSE'), rootPath: projectRootDir, outputPath: releaseRootDir },
       ...customElementsFiles
     ];
+
+    // Should we include the code-split + bundled ESM build in the package?
+    if (config.context.build.static.enabled && config.context.build.static.includeWithPackage) {
+      const releaseDistEsmDir = join(releaseDistDir, 'esm');
+      const esbuildOutputDir = join(buildOutputDir, 'esbuild');
+      await mkdirp(releaseDistEsmDir);
+      fileConfigs.push({ path: join(esbuildOutputDir, '**/*.js*'), rootPath: esbuildOutputDir, outputPath: releaseDistEsmDir });
+    }
 
     // Check if there are any project-specified files that need to be copied to the package
     if (Array.isArray(config.context.packageConfig.copyFiles) && config.context.packageConfig.copyFiles.length) {

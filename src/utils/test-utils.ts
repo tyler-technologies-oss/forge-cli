@@ -353,7 +353,8 @@ function createKarmaWebpackConfig(cliConfig: IConfig): Configuration {
                 webpackImporter: cliConfig.context.build.webpack.sassLoader.webpackImporter,
                 implementation: sass,
                 sassOptions: {
-                  includePaths: [absolutify('node_modules', cliConfig.context.paths.rootDir)]
+                  includePaths: [absolutify('node_modules', cliConfig.context.paths.rootDir)],
+                  ...cliConfig.context.build.sassOptions
                 }
               }
             }

@@ -1,4 +1,4 @@
-import { IPackageJson, OS } from '@tylertech/forge-build-tools';
+import { IPackageJson, OS, type SassCompileOptions } from '@tylertech/forge-build-tools';
 import { ICommand } from './command.js';
 
 export interface ICliConfig {
@@ -58,6 +58,7 @@ export interface IBuildProjectConfig {
   webpack: IWebpackProjectConfig;
   rollup: IRollupProjectConfig;
   esbuild: IEsbuildProjectConfig;
+  sassOptions?: SassCompileOptions['sassOptions'];
   tsconfigPath: string;
   static: IBuildStaticConfig;
   distributionBundleName: string;
@@ -75,6 +76,8 @@ export interface IWebpackProjectConfig {
 
 export interface IBuildStaticConfig {
   enabled: boolean;
+  includeWithPackage: boolean;
+  codeSplitting: boolean;
   distPath: string;
 }
 

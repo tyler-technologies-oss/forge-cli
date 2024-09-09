@@ -18,7 +18,8 @@ import {
   readFileAsync,
   readJsonFile,
   runTask,
-  writeFileAsync
+  writeFileAsync,
+  type SassCompileOptions
 } from '@tylertech/forge-build-tools';
 import jsStringEscape from 'js-string-escape';
 
@@ -218,15 +219,15 @@ export async function compileTypeScriptTask(config: IBuildTaskConfiguration, src
  * @param srcDir The location of .scss files to compile.
  * @param outputDir The output location for the compilation results.
  */
-export async function compileSassTask(srcDir: string, outputDir: string): Promise<string[]> {
-  return compileSass(join(srcDir, '**/[^_]*.scss'), srcDir, outputDir);
+export async function compileSassTask(srcDir: string, outputDir: string, sassOptions?: SassCompileOptions['sassOptions']): Promise<string[]> {
+  return compileSass(join(srcDir, '**/[^_]*.scss'), srcDir, outputDir, { sassOptions });
 }
 
 /**
  * Finds and compiles all Sass stylesheets specified within the source directory build configuration file and
  * compile them to CSS for the resulting npm package distribution.
  */
-export async function compileConfiguredStyleSheets(srcDir: string, rootDir: string, buildOutputDir: string): Promise<void> {
+export async function compileConfiguredStyleSheets(srcDir: string, rootDir: string, buildOutputDir: string, sassOptions?: SassCompileOptions['sassOptions']): Promise<void> {
   // Find all of the build.json files within the provided source directory
   const buildConfigPaths = await globFilesAsync(join(srcDir, '**/build.json'));
 
@@ -266,7 +267,7 @@ export async function compileConfiguredStyleSheets(srcDir: string, rootDir: stri
 
   // If we have some files to compile, output the resulting css to the styles directory within the build dir
   if (sassFiles.length) {
-    await compileSass(sassFiles, rootDir, buildOutputDir);
+    await compileSass(sassFiles, rootDir, buildOutputDir, { sassOptions });
   }
 }
 
