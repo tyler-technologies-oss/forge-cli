@@ -1,6 +1,6 @@
 {
   "name": "@tylertech/forge-cli",
-  "version": "3.1.0",
+  "version": "3.1.1",
   "description": "A CLI for managing Tyler Forge™ Web Component projects.",
   "repository": {
     "type": "git",
