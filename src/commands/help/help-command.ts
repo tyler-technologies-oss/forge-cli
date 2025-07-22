@@ -7,8 +7,10 @@ import { ICommand, ICommandParameter } from '../../core/command.js';
 import { VersionCommand } from '../version/version-command.js';
 
 const CLI_TITLE = 'Forge CLI';
-const CLI_DESCRIPTION = 'The CLI utility for supporting Forge Web Component projects.';
-const CLI_USAGE = 'Usage: \`forge [options ...] <command> [sub-command(s)] [options ...]\`';
+const CLI_DESCRIPTION =
+  'The CLI utility for supporting Forge Web Component projects.';
+const CLI_USAGE =
+  'Usage: \`forge [options ...] <command> [sub-command(s)] [options ...]\`';
 
 const b = chalk.blue;
 const g = chalk.green;
@@ -48,20 +50,30 @@ export class HelpCommand implements ICommand {
 
   public async run(param: ICommandParameter): Promise<void> {
     const commandNames = param.args._.slice(1);
-    const content = commandNames.length ? this._generateCommandUsage(commandNames, param.config.commands) : this._generateGeneralUsage(param.config.commands);
+    const content = commandNames.length
+      ? this._generateCommandUsage(commandNames, param.config.commands)
+      : this._generateGeneralUsage(param.config.commands);
     return Logger.print(commandLineUsage(content));
   }
 
   public matcher(args: ParsedArgs): boolean {
-    return !args.version && !args.v && (!args._.length || args._[0] === 'help' || args.h || args.help);
+    return (
+      !args.version &&
+      !args.v &&
+      (!args._.length || args._[0] === 'help' || args.h || args.help)
+    );
   }
 
   /**
    * Generates the full usage content.
    * @param commands The full list of available commands.
    */
-  private _generateGeneralUsage(commands: ICommand[]): commandLineUsage.Section[] {
-    const sortedCommands = commands.filter(c => !c.usagePrivate).sort(this._commandComparator);
+  private _generateGeneralUsage(
+    commands: ICommand[]
+  ): commandLineUsage.Section[] {
+    const sortedCommands = commands
+      .filter(c => !c.usagePrivate)
+      .sort(this._commandComparator);
     const availableCommands = this._getAvailableCommands(sortedCommands);
 
     return [
@@ -81,16 +93,20 @@ export class HelpCommand implements ICommand {
           {
             name: 'quiet',
             alias: 'q',
-            description: 'Skip prompts for user input. This requires all parameters to be specified as options/arguments.'
+            description:
+              'Skip prompts for user input. This requires all parameters to be specified as options/arguments.'
           },
           {
             name: 'verbose',
-            description: 'Prints out detailed information for commands that support it.'
+            description:
+              'Prints out detailed information for commands that support it.'
           }
         ]
       },
       {
-        content: chalk.yellow('Run `forge help <command>` for help with a specific command.'),
+        content: chalk.yellow(
+          'Run `forge help <command>` for help with a specific command.'
+        ),
         raw: true
       }
     ] as commandLineUsage.Section[];
@@ -101,23 +117,44 @@ export class HelpCommand implements ICommand {
    * @param commandName The command name to print usage for.
    * @param commands The full list of commands.
    */
-  private _generateCommandUsage(commandNames: string[], commands: ICommand[]): commandLineUsage.Section[] {
-    const command: ICommand | undefined = this._findCommand(commandNames, commands);
+  private _generateCommandUsage(
+    commandNames: string[],
+    commands: ICommand[]
+  ): commandLineUsage.Section[] {
+    const command: ICommand | undefined = this._findCommand(
+      commandNames,
+      commands
+    );
 
     if (!command) {
-      throw new Error('Invalid command name specified. This command does not exist.');
+      throw new Error(
+        'Invalid command name specified. This command does not exist.'
+      );
     }
 
     const usage: commandLineUsage.Section[] = [
       {
-        header: `${chalk.green('forge')} ${chalk.blue(commandNames.join(' '))}` + (command.args ? ` ${chalk.yellow(command.args.filter(a => !!a.required).map(a => `[${a.name}]`).join(' '))}` : ''),
+        header:
+          `${chalk.green('forge')} ${chalk.blue(commandNames.join(' '))}` +
+          (command.args
+            ? ` ${chalk.yellow(
+                command.args
+                  .filter(a => !!a.required)
+                  .map(a => `[${a.name}]`)
+                  .join(' ')
+              )}`
+            : ''),
         content: command.description
       }
     ];
 
     if (command.alias) {
       usage.push({
-        header: 'Alias: ' + (command.alias instanceof Array ? command.alias.join(', ') : command.alias)
+        header:
+          'Alias: ' +
+          (command.alias instanceof Array
+            ? command.alias.join(', ')
+            : command.alias)
       });
     }
 
@@ -140,14 +177,21 @@ export class HelpCommand implements ICommand {
     }
 
     if (command.subCommands && command.subCommands.length) {
-      usage.push({
-        header: chalk.bold('Sub-commands'),
-        content: command.subCommands.filter(sc => !sc.usagePrivate).sort(this._commandComparator).map(this._commandToUsage)
-      },
-      {
-        content: chalk.yellow('Run `forge help <command> <command> ...` for help with a specific sub-command.'),
-        raw: true
-      });
+      usage.push(
+        {
+          header: chalk.bold('Sub-commands'),
+          content: command.subCommands
+            .filter(sc => !sc.usagePrivate)
+            .sort(this._commandComparator)
+            .map(this._commandToUsage)
+        },
+        {
+          content: chalk.yellow(
+            'Run `forge help <command> <command> ...` for help with a specific sub-command.'
+          ),
+          raw: true
+        }
+      );
     }
 
     return usage;
@@ -162,7 +206,10 @@ export class HelpCommand implements ICommand {
     return 0;
   }
 
-  private _findCommand(commandNames: string[], commands: ICommand[]): ICommand | undefined {
+  private _findCommand(
+    commandNames: string[],
+    commands: ICommand[]
+  ): ICommand | undefined {
     if (!commands.length) {
       return;
     }
@@ -178,7 +225,7 @@ export class HelpCommand implements ICommand {
     if (!commandNames.length) {
       return command;
     }
-    
+
     return this._findCommand(commandNames, command.subCommands || []);
   }
 
@@ -188,8 +235,8 @@ export class HelpCommand implements ICommand {
 
   /**
    * Recursively finds all available sub-commands for the usage.
-   * @param commands 
-   * @param cmdStr 
+   * @param commands
+   * @param cmdStr
    */
   private _getAvailableCommands(commands: ICommand[], cmdStr = ''): any[] {
     let usage: any[] = [];
@@ -201,7 +248,14 @@ export class HelpCommand implements ICommand {
         description: command.description
       });
       if (command.subCommands) {
-        usage = usage.concat(...this._getAvailableCommands(command.subCommands.filter(sc => !sc.usagePrivate).sort(this._commandComparator), name));
+        usage = usage.concat(
+          ...this._getAvailableCommands(
+            command.subCommands
+              .filter(sc => !sc.usagePrivate)
+              .sort(this._commandComparator),
+            name
+          )
+        );
       }
     }
 

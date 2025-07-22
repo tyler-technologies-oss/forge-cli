@@ -1,0 +1,11 @@
+.github/
+.husky/
+dist/
+docs/
+.vscode/
+node_modules/
+package-lock.json
+CONTRIBUTING.md
+CHANGELOG.md
+README.md
+LICENSE

@@ -1,10 +1,10 @@
 {
   "compilerOptions": {
-    "target": "es2020",
-    "module": "esnext",
-    "moduleResolution": "node",
-    "lib": ["es2020"],
-    "noImplicitAny": false,
+    "target": "es2022",
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
+    "lib": ["es2022"],
+    "strict": true,
     "strictNullChecks": true,
     "experimentalDecorators": true,
     "importHelpers": true,
@@ -15,8 +15,5 @@
     "declaration": true,
     "outDir": "dist"
   },
-  "files": [
-    "src/index.ts",
-    "src/utils/worker-pool.ts"
-  ]
+  "files": ["src/index.ts"]
 }

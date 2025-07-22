@@ -11,10 +11,16 @@ export interface IGenerateCustomElementsManifestOptions {
 export async function generateCustomElementsManifest(
   projectConfig: IProjectConfig,
   cwd: string,
-  { configFileName, outDir, quiet = true }: IGenerateCustomElementsManifestOptions = {}
+  {
+    configFileName,
+    outDir,
+    quiet = true
+  }: IGenerateCustomElementsManifestOptions = {}
 ): Promise<string> {
   let cmd = 'npx custom-elements-manifest analyze';
-  configFileName = configFileName ?? projectConfig.customElementsManifestConfig?.configFileName;
+  configFileName =
+    configFileName ??
+    projectConfig.customElementsManifestConfig?.configFileName;
 
   if (configFileName) {
     cmd += ` --config ${cpath.join(projectConfig.paths.rootDir, configFileName)}`;
