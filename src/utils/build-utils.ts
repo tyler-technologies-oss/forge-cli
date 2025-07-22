@@ -125,14 +125,17 @@ export async function inlineContentTask(outputDir: string): Promise<void> {
 
   await modifyFile(join(outputDir, '**/*.{ts,js}'), async info => {
     const dirpath = dirname(info.filepath);
+    let result = info.contents;
+    const matches = [...info.contents.matchAll(importRegex)];
     
-    return info.contents.replace(importRegex, (match, $1, $2) => {
+    for (const match of matches) {
+      const [fullMatch, $1, $2] = match;
       const requiredFilePath = resolve(dirpath, $2);
       const extension = extname(requiredFilePath);
       const isValidMatch = ['.css', '.scss', '.html'].includes(extension);
       
       if (!isValidMatch) {
-        return match;
+        continue;
       }
 
       let fileContents = readFileSync(requiredFilePath, 'utf8').toString();
@@ -141,13 +144,16 @@ export async function inlineContentTask(outputDir: string): Promise<void> {
       if (extension === '.css') {
         fileContents = minifyCss(fileContents);
       } else if (extension === '.html') {
-        fileContents = minifyHtml(fileContents);
+        fileContents = await minifyHtml(fileContents);
       } else {
         throw new Error(`Invalid file was attempted to be parsed during \`inlineContentTask\`: ${requiredFilePath}`);
       }
 
-      return `const${$1}= \'${jsStringEscape(fileContents)}\'`;
-    });
+      const replacement = `const${$1}= \'${jsStringEscape(fileContents)}\'`;
+      result = result.replace(fullMatch, replacement);
+    }
+    
+    return result;
   });
 }
 
