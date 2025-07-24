@@ -127,7 +127,7 @@ export async function build({
         stagingSrcDir,
         stagingSrcDir,
         esmBuildDir,
-        ts.ScriptTarget.ES2020,
+        ts.ScriptTarget.ES2022,
         ts.ModuleKind.ES2015,
         true,
         typingsDir
@@ -351,26 +351,29 @@ export async function createDistributionPackage({
         author,
         license,
         repository,
+        type: 'module',
         main: 'esm/index.js',
         module: 'esm/index.js',
         typings: 'esm/index.d.ts',
         exports: {
           '.': {
-            import: 'esm/index.js',
-            types: 'esm/index.d.ts'
+            default: './esm/index.js',
+            types: './esm/index.d.ts'
           },
           './*': {
-            import: 'esm/*.js',
-            types: 'esm/*.d.ts'
+            default: './esm/*/index.js',
+            types: './esm/*/index.d.ts'
           },
+          "./dist/*": "./dist/*",
+          "./sass/*": "./sass/*",
           './package.json': {
             default: './package.json'
           },
           './custom-elements.json': {
             default: './custom-elements.json'
-          }
+          },
+          ...config.context.build.package?.exports
         },
-        sideEffects: false,
         dependencies,
         peerDependencies,
         ...customElements

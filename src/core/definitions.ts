@@ -55,6 +55,7 @@ export interface IBuildProjectConfig {
   tsconfigPath: string;
   static: IBuildStaticConfig;
   distributionBundleName: string;
+  package?: IPackageBuildConfig;
 }
 
 export interface IBuildStaticConfig {
@@ -69,6 +70,10 @@ export interface IEsbuildProjectConfig {
   supported?: Record<string, boolean>;
   minify?: boolean;
   bundle?: boolean;
+}
+
+export interface IPackageBuildConfig {
+  exports?: Record<string, any>;
 }
 
 export interface IProjectConfigPaths {

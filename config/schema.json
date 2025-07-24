@@ -204,6 +204,21 @@
         "sassOptions": {
           "description": "Options to provide to the sass compiler. See the Sass docs for more information.",
           "type": "object"
+        },
+        "package": {
+          "type": "object",
+          "description": "Package configuration options for the build.",
+          "additionalProperties": false,
+          "properties": {
+            "exports": {
+              "type": "object",
+              "description": "Additional exports configuration for the package.",
+              "additionalProperties": {
+                "type": ["string", "object"],
+                "description": "The export configuration for the package."
+              }
+            }
+          }
         }
       }
     },

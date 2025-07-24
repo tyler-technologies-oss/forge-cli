@@ -182,7 +182,7 @@ export async function compileTypeScriptTask(
   const defaultOptions: ts.CompilerOptions = {
     target,
     module,
-    moduleResolution: ts.ModuleResolutionKind.Bundler,
+    moduleResolution: ts.ModuleResolutionKind.Node10,
     lib: ['dom', 'es2022'],
     rootDir: libDir,
     outDir: relative(config.cwd, outputDir),
