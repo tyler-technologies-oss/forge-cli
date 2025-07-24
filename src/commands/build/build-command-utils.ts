@@ -364,8 +364,8 @@ export async function createDistributionPackage({
             default: './esm/*/index.js',
             types: './esm/*/index.d.ts'
           },
-          "./dist/*": "./dist/*",
-          "./sass/*": "./sass/*",
+          './dist/*': './dist/*',
+          './sass/*': './sass/*',
           './package.json': {
             default: './package.json'
           },
