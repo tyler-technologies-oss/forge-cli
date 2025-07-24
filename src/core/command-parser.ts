@@ -13,15 +13,20 @@ export interface ICommandParameter {
 export class CommandParser {
   /**
    * Parses a specific command to locate the command, optionally validate, and then execute the command.
-   * @param args 
-   * @param config 
+   * @param args
+   * @param config
    */
   public static async run(args: ParsedArgs, config: IConfig): Promise<any> {
     // Locate the command within the command configuration
-    const command: ICommand | undefined = CommandParser.findCommand(args, config.commands);
+    const command: ICommand | undefined = CommandParser.findCommand(
+      args,
+      config.commands
+    );
 
     if (!command) {
-      throw new Error('Command not found. Run `forge help` for usage information.');
+      throw new Error(
+        'Command not found. Run `forge help` for usage information.'
+      );
     }
 
     // If this command provides a validator function call it before execution
@@ -33,7 +38,9 @@ export class CommandParser {
     }
 
     // Run the command
-    return command.run && typeof command.run === 'function' ? await command.run.call(command, { args, config } as ICommandParameter) : Promise.resolve();
+    return command.run && typeof command.run === 'function'
+      ? await command.run.call(command, { args, config } as ICommandParameter)
+      : Promise.resolve();
   }
 
   /**
@@ -42,15 +49,27 @@ export class CommandParser {
    * @param {ICliCommand[]} commands The list of commands.
    * @param {int} argsIndex The index of which command/sub-command is being processed.
    */
-  public static findCommand(args: ParsedArgs, commands: ICommand[], argsIndex = 0): ICommand | undefined {
+  public static findCommand(
+    args: ParsedArgs,
+    commands: ICommand[],
+    argsIndex = 0
+  ): ICommand | undefined {
     const argCmd: string = args._[argsIndex];
     for (const cmd of commands) {
       if (CommandParser._matchesCommand(cmd, argCmd, args)) {
-        if (args._.length > argsIndex + 1 && cmd.subCommands && cmd.subCommands.length) {
-          const foundSubCommand = CommandParser.findCommand(args, cmd.subCommands, ++argsIndex);
-          
-          // If we didn't find a matching sub-command, the parent command may take args so we now need 
-          // to assume that's the command the user wants. Validation of the commands' args is expected 
+        if (
+          args._.length > argsIndex + 1 &&
+          cmd.subCommands &&
+          cmd.subCommands.length
+        ) {
+          const foundSubCommand = CommandParser.findCommand(
+            args,
+            cmd.subCommands,
+            ++argsIndex
+          );
+
+          // If we didn't find a matching sub-command, the parent command may take args so we now need
+          // to assume that's the command the user wants. Validation of the commands' args is expected
           // to handle invalid values at this point if the command is unwanted.
           if (!foundSubCommand && cmd.args) {
             return cmd;
@@ -70,14 +89,27 @@ export class CommandParser {
    * @param {string} arg The current arg being processed.
    * @param {any} args The full list of arguments.
    */
-  private static _matchesCommand(cmd: ICommand, arg: string, args: any): boolean {
+  private static _matchesCommand(
+    cmd: ICommand,
+    arg: string,
+    args: any
+  ): boolean {
     if (!cmd.matcher && !cmd.name) {
-      throw new Error('A command or matcher or command name must be specified for all commands.');
+      throw new Error(
+        'A command or matcher or command name must be specified for all commands.'
+      );
     }
 
-    if (cmd.matcher && typeof cmd.matcher === 'function' && cmd.matcher.call(null, args)) {
+    if (
+      cmd.matcher &&
+      typeof cmd.matcher === 'function' &&
+      cmd.matcher.call(null, args)
+    ) {
       return true;
-    } else if ((cmd.name && arg === cmd.name) || (cmd.alias && CommandParser._matchesAlias(arg, cmd.alias))) {
+    } else if (
+      (cmd.name && arg === cmd.name) ||
+      (cmd.alias && CommandParser._matchesAlias(arg, cmd.alias))
+    ) {
       return true;
     }
     return false;
@@ -89,6 +121,9 @@ export class CommandParser {
    * @param alias The alias or collection of aliases.
    */
   private static _matchesAlias(arg: string, alias: string | string[]): boolean {
-    return (alias instanceof Array && alias.some(sc => sc === arg)) || (typeof alias === 'string' && arg === alias);
+    return (
+      (alias instanceof Array && alias.some(sc => sc === arg)) ||
+      (typeof alias === 'string' && arg === alias)
+    );
   }
 }

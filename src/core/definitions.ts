@@ -1,4 +1,7 @@
-import { IPackageJson, OS, type SassCompileOptions } from '@tylertech/forge-build-tools';
+import {
+  IPackageJson,
+  type SassCompileOptions
+} from '@tylertech/forge-build-tools';
 import { ICommand } from './command.js';
 
 export interface ICliConfig {
@@ -11,9 +14,7 @@ export interface IConfig {
   commands: ICommand[];
   cwd: string;
   cli: ICliConfig;
-  os: OS;
   context: IProjectConfig;
-  getPackageRegistry(): string | undefined;
 }
 
 export interface IProjectConfig {
@@ -26,12 +27,6 @@ export interface IProjectConfig {
   build: IBuildProjectConfig;
   packageConfig: IPackageConfig;
   customElementsManifestConfig: ICustomElementsManifestConfig;
-  
-  /** @deprecated */
-  testDirName: string;
-
-  /** @deprecated */
-  karma: IKarmaProjectConfig;
 }
 
 export interface ICustomElementsManifestConfig {
@@ -55,23 +50,12 @@ export interface ICopyFileDescriptor {
 }
 
 export interface IBuildProjectConfig {
-  webpack: IWebpackProjectConfig;
-  rollup: IRollupProjectConfig;
   esbuild: IEsbuildProjectConfig;
   sassOptions?: SassCompileOptions['sassOptions'];
   tsconfigPath: string;
   static: IBuildStaticConfig;
   distributionBundleName: string;
-}
-
-export interface IWebpackProjectConfig {
-  mode?: 'development' | 'production';
-  libraryTarget?: string;
-  devtool?: IDevtoolConfig;
-  externals?: any;
-  filename?: string;
-  variableName?: string | string[];
-  sassLoader: IWebpackSassLoaderConfig;
+  package?: IPackageBuildConfig;
 }
 
 export interface IBuildStaticConfig {
@@ -81,14 +65,6 @@ export interface IBuildStaticConfig {
   distPath: string;
 }
 
-export interface IWebpackSassLoaderConfig {
-  webpackImporter: boolean;
-}
-
-export interface IRollupProjectConfig {
-  bundle?: boolean;
-}
-
 export interface IEsbuildProjectConfig {
   target?: string | string[];
   supported?: Record<string, boolean>;
@@ -96,30 +72,8 @@ export interface IEsbuildProjectConfig {
   bundle?: boolean;
 }
 
-export interface IDevtoolConfig {
-  production: string;
-  development: string;
-}
-
-export interface IKarmaProjectConfig {
-  frameworks?: string[];
-  plugins?: Array<string | IKarmaPluginDescriptor>;
-  files?: string[];
-  stylesheets?: string[];
-  exclude?: string[];
-  coverageThreshold?: ICoverageThreshold;
-}
-
-export interface IKarmaPluginDescriptor {
-  path: string;
-  name: string;
-}
-
-export interface ICoverageThreshold {
-  statements?: number;
-  branches?: number;
-  lines?: number;
-  functions?: number;
+export interface IPackageBuildConfig {
+  exports?: Record<string, any>;
 }
 
 export interface IProjectConfigPaths {
@@ -131,20 +85,6 @@ export interface IProjectConfigPaths {
   distMetadataDir: string;
   srcDir: string;
   libDir: string;
-  testDir: string;
-  specDir: string;
-  stylelintConfigPath: string;
-  webpackConfigPath: string;
-  karmaConfigPath: string;
-}
-
-export interface IBuildConfig {
-  skipPurifyCss: boolean;
-  purifycss: IBuildConfigPurify;
-}
-
-export interface IBuildConfigPurify {
-  whitelist: string[];
 }
 
 export interface IGlobalOptions {

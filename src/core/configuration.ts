@@ -1,12 +1,16 @@
-import { isAbsolute } from 'path';
+import { IPackageJson, deepCopy } from '@tylertech/forge-build-tools';
 import cpath from 'canonical-path';
 import deepMerge from 'deepmerge';
-import { OS, IPackageJson, deepCopy } from '@tylertech/forge-build-tools';
-
-import { IConfig, ICliConfig, IProjectConfig } from './definitions.js';
+import { isAbsolute } from 'path';
 import { DEFAULT_PROJECT_CONFIG } from '../constants.js';
-import { ICommand } from './command.js';
 import { loadPackageJson } from '../utils/utils.js';
+import { ICommand } from './command.js';
+import {
+  ICliConfig,
+  IConfig,
+  IProjectConfig,
+  IProjectConfigPaths
+} from './definitions.js';
 
 const { join, resolve } = cpath;
 
@@ -16,10 +20,10 @@ const { join, resolve } = cpath;
 export class Configuration implements IConfig {
   /** The current working directory. */
   public cwd = '';
-  /** The current operating system. */
-  public os: OS = OS.Unknown;
+
   /** The execution environment project configuration. */
-  public context: IProjectConfig;
+  public context!: IProjectConfig;
+
   /** The CLI environment configuration. */
   public cli: ICliConfig = {
     binDir: '',
@@ -29,46 +33,20 @@ export class Configuration implements IConfig {
 
   /**
    * Creates a new instance of the `Configuration`.
-   * @param os The current operating system.
    * @param currentWorkingDir The current working directory path.
    * @param cliBinDir The path to the bin directory holding our CLI executable.
    * @param projectConfig The existing project configuration where the command is running.
    * @param commands The list of commands available in the CLI.
    */
-  constructor(os: string, currentWorkingDir: string, cliBinDir: string, projectConfig: IProjectConfig | undefined, public commands: ICommand[]) {
-    this._initOS(os);
+  constructor(
+    currentWorkingDir: string,
+    cliBinDir: string,
+    projectConfig: IProjectConfig | undefined,
+    public commands: ICommand[]
+  ) {
     this._initCwd(currentWorkingDir);
     this._initCliConfig(cliBinDir);
     this._initProjectConfig(currentWorkingDir, projectConfig);
-  }
-
-  /**
-   * Gets the registry URL from the publish config of the CLI package.json
-   */
-  public getPackageRegistry(): string | undefined {
-    if (this.cli.package && this.cli.package.publishConfig && this.cli.package.publishConfig.registry) {
-      return this.cli.package.publishConfig.registry;
-    }
-  }
-
-  /**
-   * Determines the current operating system the CLI is running on.
-   * @param os The current operating system string.
-   */
-  private _initOS(os: string): void {
-    switch (os) {
-      case 'darwin':
-        this.os = OS.Mac;
-        break;
-      case 'win32':
-        this.os = OS.Windows;
-        break;
-      case 'linux':
-        this.os = OS.Linux;
-        break;
-      default:
-        this.os = OS.Unknown;
-    }
   }
 
   /**
@@ -81,7 +59,7 @@ export class Configuration implements IConfig {
 
   /**
    * Initializes the CLI environment configuration.
-   * @param cliBinDir 
+   * @param cliBinDir
    */
   private async _initCliConfig(cliBinDir: string): Promise<void> {
     this.cli.binDir = resolve(cliBinDir);
@@ -94,12 +72,20 @@ export class Configuration implements IConfig {
    * @param cwd The current working directory.
    * @param config The existing project configuration to merge with.
    */
-  private _initProjectConfig(cwd: string, config: IProjectConfig | undefined): void {
-    this.context = config ? deepMerge(deepCopy(DEFAULT_PROJECT_CONFIG), config) : deepCopy(DEFAULT_PROJECT_CONFIG);
+  private _initProjectConfig(
+    cwd: string,
+    config: IProjectConfig | undefined
+  ): void {
+    this.context = config
+      ? deepMerge(deepCopy(DEFAULT_PROJECT_CONFIG), config)
+      : deepCopy(DEFAULT_PROJECT_CONFIG);
 
-    for (const prop in this.context.paths) {
-      if (this.context.paths.hasOwnProperty(prop) && !isAbsolute(this.context.paths[prop])) {
-        this.context.paths[prop] = resolve(cwd, this.context.paths[prop]);
+    for (const [key, value] of Object.entries(this.context.paths)) {
+      if (!isAbsolute(value)) {
+        this.context.paths[key as keyof IProjectConfigPaths] = resolve(
+          cwd,
+          value
+        );
       }
     }
   }

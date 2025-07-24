@@ -11,16 +11,13 @@
     "srcDirName": {
       "$ref": "#/definitions/srcDirName"
     },
-    "libDirName":  {
+    "libDirName": {
       "$ref": "#/definitions/libDirName"
     },
-    "testDirName":  {
-      "$ref": "#/definitions/testDirName"
-    },
-    "distDirName":  {
+    "distDirName": {
       "$ref": "#/definitions/distDirName"
     },
-    "buildConfigFileName":  {
+    "buildConfigFileName": {
       "$ref": "#/definitions/buildConfigFileName"
     },
     "packageConfig": {
@@ -34,9 +31,6 @@
     },
     "build": {
       "$ref": "#/definitions/build"
-    },
-    "karma": {
-      "$ref": "#/definitions/karma"
     },
     "paths": {
       "$ref": "#/definitions/paths"
@@ -52,11 +46,6 @@
       "type": "string",
       "description": "The name of the library directory under [srcDirName].",
       "default": "lib"
-    },
-    "testDirName": {
-      "type": "string",
-      "description": "The name of the test directory under [srcDirName].",
-      "default": "test"
     },
     "distDirName": {
       "type": "string",
@@ -101,11 +90,7 @@
             "type": "object",
             "description": "A copy file descriptor.",
             "additionalProperties": false,
-            "required": [
-              "pattern",
-              "root",
-              "output"
-            ],
+            "required": ["pattern", "root", "output"],
             "properties": {
               "pattern": {
                 "type": "string",
@@ -174,84 +159,6 @@
           "description": "Sets the path to the tsconfig file to use.",
           "type": "string"
         },
-        "webpack": {
-          "description": "Additional options to provide to Webpack during bundling.",
-          "type": "object",
-          "additionalProperties": false,
-          "properties": {
-            "mode": {
-              "type": "string",
-              "description": "The webpack execution mode.",
-              "anyOf": [
-                {
-                  "const": "production"
-                },
-                {
-                  "const": "development"
-                }
-              ]
-            },
-            "libraryTarget": {
-              "type": "string",
-              "description": "The bundle library style to target."
-            },
-            "devtool": {
-              "type": "object",
-              "description": "The devtool to use for sourcemaps.",
-              "additionalProperties": false,
-              "properties": {
-                "production": {
-                  "type": "string",
-                  "description": "The sourcemap to use for production mode."
-                },
-                "development": {
-                  "type": "string",
-                  "description": "The sourcemap to use for development mode."
-                }
-              }
-            },
-            "externals": {
-              "type": "object",
-              "description": "The externals definition for external modules.",
-              "additionalProperties": {
-                "type": ["string", "object"],
-                "description": "The external module names."
-              }
-            },
-            "filename": {
-              "type": "string",
-              "description": "The name prefix to use for the resulting output file."
-            },
-            "variableName": {
-              "oneOf": [
-                {
-                  "type": "string",
-                  "description": "The name of the global variable to push into the window object at runtime."
-                },
-                {
-                  "type": "array",
-                  "description": "An array of variables names that will be nested underneath each other to make up the path to the library.",
-                  "default": [],
-                  "items": {
-                    "type": "string"
-                  }
-                }
-              ]
-            },
-            "sassLoader": {
-              "description": "Provides options to the sass webpack loader.",
-              "type": "object",
-              "additionalProperties": false,
-              "properties": {
-                "webpackImporter": {
-                  "description": "Sets whether the default webpack importer is used or not.",
-                  "type": "boolean",
-                  "default": true
-                }
-              }
-            }
-          }
-        },
         "esbuild": {
           "description": "Additional options to provide to esbuild during compilation.",
           "type": "object",
@@ -297,62 +204,19 @@
         "sassOptions": {
           "description": "Options to provide to the sass compiler. See the Sass docs for more information.",
           "type": "object"
-        }
-      }
-    },
-    "karma": {
-      "description": "Additional options to provide to Karma during testing.",
-      "type": "object",
-      "additionalProperties": false,
-      "properties": {
-        "files": {
-          "type": "array",
-          "description": "Additional files to pass to Karma",
-          "default": [],
-          "items": {
-            "type": "string"
-          }
         },
-        "stylesheets": {
-          "type": "array",
-          "description": "Global stylesheets to pass to the sass compiler when building and loading the test environment.",
-          "default": [],
-          "items": {
-            "type": "string"
-          }
-        },
-        "exclude": {
-          "type": "array",
-          "description": "List of file paths/glob patterns to exclude from testing compilation.",
-          "default": [],
-          "items": {
-            "type": "string"
-          }
-        },
-        "coverageThreshold": {
+        "package": {
           "type": "object",
-          "description": "An object with minimum code coverage thresholds.",
+          "description": "Package configuration options for the build.",
           "additionalProperties": false,
           "properties": {
-            "statements": {
-              "type": "number",
-              "description": "The minimum statement coverage percentage (0 to 100).",
-              "default": 50
-            },
-            "branches": {
-              "type": "number",
-              "description": "The minimum branch coverage percentage (0 to 100).",
-              "default": 50
-            },
-            "lines": {
-              "type": "number",
-              "description": "The minimum line coverage percentage (0 to 100).",
-              "default": 50
-            },
-            "functions": {
-              "type": "number",
-              "description": "The minimum function coverage percentage (0 to 100). Specify a negative number for minimum skipped function count.",
-              "default": 50
+            "exports": {
+              "type": "object",
+              "description": "Additional exports configuration for the package.",
+              "additionalProperties": {
+                "type": ["string", "object"],
+                "description": "The export configuration for the package."
+              }
             }
           }
         }
@@ -402,31 +266,6 @@
           "type": "string",
           "description": "The path to the component library directory.",
           "default": "src/lib"
-        },
-        "testDir": {
-          "type": "string",
-          "description": "The path to the testing directory.",
-          "default": "src/test"
-        },
-        "specDir": {
-          "type": "string",
-          "description": "The path to the unit testing spec directory.",
-          "default": "src/test/spec"
-        },
-        "stylelintConfigPath": {
-          "type": "string",
-          "description": "The path to the global stylelint configuration file.",
-          "default": ".stylelintrc"
-        },
-        "webpackConfigPath": {
-          "type": "string",
-          "description": "The path to the webpack configuration file.",
-          "default": "webpack.config.js"
-        },
-        "karmaConfigPath": {
-          "type": "string",
-          "description": "The path to the Karma configuration file.",
-          "default": "karma.conf.js"
         }
       }
     }

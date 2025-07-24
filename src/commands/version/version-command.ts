@@ -13,7 +13,7 @@ export class VersionCommand implements ICommand {
   public usagePrivate = true;
 
   public matcher(args: ParsedArgs): boolean {
-    return args._.length === 0 && args.version || args.v;
+    return (args._.length === 0 && args.version) || args.v;
   }
 
   public async run(param: ICommandParameter): Promise<void> {
